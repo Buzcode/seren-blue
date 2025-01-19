@@ -131,7 +131,8 @@ import cartoondocfemale3 from './cartoondocfemale3.png';
         },
         {
             _id: 'doc1',
-            name: Doctor2,
+            name: 'mr.(some name)',
+            image: Doctor2,
             speciality: 'Neurologist',
             degree: 'MBBS, PhD (Neurology)',
             experience: '12 Years',
