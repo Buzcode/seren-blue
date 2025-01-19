@@ -16,6 +16,18 @@ import femaleDoctor9 from './femaleDoctor9.png';
 import femaleDoctor10 from './femaleDoctor10.png';
 import femaleDoctor11 from './femaleDoctor11.png';
 import logo from './logo.png';
+import profilepic1 from './profilepic1.png';
+import dropdownicon from './dropdownicon.png';
+import doctors1 from './doctors1.png';
+import arrowicon from'./arrowicon.png';
+import doctors2 from './doctors2.png';
+import cartoondoc1 from './cartoondoc1.png';
+import cartoondoc2 from './cartoondoc2.png';
+import cartoondoc3 from './cartoondoc3.png';
+import cartoondocfemale1 from './cartoondocfemale1.png';
+import cartoondocfemale2 from './cartoondocfemale2.png';
+import cartoondocfemale3 from './cartoondocfemale3.png';
+
 
     export const assets= {
         Doctor1,
@@ -36,55 +48,42 @@ import logo from './logo.png';
         femaleDoctor10,
         femaleDoctor11,
         logo,
+        profilepic1,
+        dropdownicon,
+        doctors1,
+        arrowicon,
+        doctors2,
+        cartoondoc1,
+        cartoondoc2,
+        cartoondoc3,
+        cartoondocfemale1,
+        cartoondocfemale2,
+        cartoondocfemale3,
     }
     export const specialityData = [
         {
             speciality: 'General physician',
-            Image: Doctor1
+            image: cartoondoc1
         },
         {
             speciality: 'Gynecologist',
-            image: femaleDoctor1
+            image: cartoondocfemale1
         },
         {
             speciality: 'Dermatologist',
-            image: femaleDoctor2
-        },
-        {
-            speciality: 'Pediatricians',
-            image: Doctor2
+            image: cartoondocfemale2
         },
         {
             speciality: 'Neurologist',
-            image: doctor3
+            image: cartoondoc2
         },
         {
             speciality: 'Gastroenterologist',
-            image: femaleDoctor3
-        },
-        {
-            speciality: 'Opthalmologist',
-            image: femaleDoctor4
-        },
-        {
-            speciality: 'Endocrinologist',
-            image: femaleDoctor5
-        },
-        {
-            speciality: 'Cardiologist',
-            image: femaleDoctor6
-        },
-        {
-            speciality: 'Oncologist',
-            image: femaleDoctor7
+            image: cartoondocfemale3
         },
         {
             speciality: 'Urologist',
-            image: doctor3 
-        },
-        {
-            speciality: 'Pulomonologist',
-            image: doctor4
+            image: cartoondoc3
         }
 
     ]
