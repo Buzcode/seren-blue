@@ -2,8 +2,8 @@ import React from 'react'
 
 const App = () => {
   return (
-    <div classname='text-green-500'>
-      Testing Tailwind
+    <div className='text-green-600'>
+      Testing Tailwind 
     </div>
   )
 }
