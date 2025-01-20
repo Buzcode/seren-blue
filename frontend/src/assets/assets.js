@@ -27,6 +27,7 @@ import cartoondoc3 from './cartoondoc3.png';
 import cartoondocfemale1 from './cartoondocfemale1.png';
 import cartoondocfemale2 from './cartoondocfemale2.png';
 import cartoondocfemale3 from './cartoondocfemale3.png';
+import appointment_img from './appointment_img.png';
 
 
     export const assets= {
@@ -59,6 +60,7 @@ import cartoondocfemale3 from './cartoondocfemale3.png';
         cartoondocfemale1,
         cartoondocfemale2,
         cartoondocfemale3,
+        appointment_img,
     }
     export const specialityData = [
         {
@@ -106,6 +108,7 @@ import cartoondocfemale3 from './cartoondocfemale3.png';
             _id: 'femaleDoc1',
             name: 'Dr. Farhana Alam',
             image: femaleDoctor1,
+            speciality: 'Gynecologist',
             degree: 'MBBS, FCPS (Gynecology)',
             experience: '9 Years',
             about: 'Dr. Alam is dedicated to women\'s health and well-being.',
@@ -131,12 +134,12 @@ import cartoondocfemale3 from './cartoondocfemale3.png';
         },
         {
             _id: 'doc1',
-            name: 'mr.(some name)',
+            name: 'Dr.Richard James',
             image: Doctor2,
             speciality: 'Neurologist',
             degree: 'MBBS, PhD (Neurology)',
             experience: '12 Years',
-            about: 'Dr. Rahman specializes in neurological disorders and treatment.',
+            about: 'Dr. Richard specializes in neurological disorders and treatment.',
             fees: 2000,
               address: {
                 line1: 'Neuroscience Clinic',
