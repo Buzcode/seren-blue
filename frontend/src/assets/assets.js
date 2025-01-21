@@ -15,6 +15,7 @@ import femaleDoctor8 from './femaleDoctor8.png';
 import femaleDoctor9 from './femaleDoctor9.png';
 import femaleDoctor10 from './femaleDoctor10.png';
 import femaleDoctor11 from './femaleDoctor11.png';
+import femaleDoctor12 from './femaleDoctor12.png';
 import logo from './logo.png';
 import profilepic1 from './profilepic1.png';
 import dropdownicon from './dropdownicon.png';
@@ -28,6 +29,12 @@ import cartoondocfemale1 from './cartoondocfemale1.png';
 import cartoondocfemale2 from './cartoondocfemale2.png';
 import cartoondocfemale3 from './cartoondocfemale3.png';
 import appointment_img from './appointment_img.png';
+import about_image from './about_image.png';
+import verified_icon from './verified_icon.png';
+import info_icon from './info_icon.png';
+import contact_image from './contact_image.png';
+
+
 
 
     export const assets= {
@@ -48,6 +55,7 @@ import appointment_img from './appointment_img.png';
         femaleDoctor9,
         femaleDoctor10,
         femaleDoctor11,
+        femaleDoctor12,
         logo,
         profilepic1,
         dropdownicon,
@@ -61,6 +69,11 @@ import appointment_img from './appointment_img.png';
         cartoondocfemale2,
         cartoondocfemale3,
         appointment_img,
+        about_image,
+        verified_icon,
+        info_icon,
+        contact_image,
+        
     }
     export const specialityData = [
         {
@@ -257,5 +270,19 @@ import appointment_img from './appointment_img.png';
                line1: 'Lung Care Clinic',
                 line2: '44/B, Gulshan, Dhaka'
               }
+        },
+        {
+            _id: 'femaleDoc12',
+            name: 'Dr. Shayma Khan',
+            image: femaleDoctor12,
+            speciality: 'Gynecologist',
+            degree: 'MBBS, FCPS (Gynecology)',
+            experience: '5 Years',
+            about: 'Dr. Shayma Khan is dedicated to women\'s health and well-being.',
+            fees: 1200,
+            address: {
+              line1: 'Mother & Child Care Center',
+              line2: '78/B, Dhanmondi, Dhaka'
+            }
         }
     ]
