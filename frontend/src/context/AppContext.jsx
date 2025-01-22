@@ -3,7 +3,7 @@ import { doctors } from "../assets/assets";
 export const AppContext= createContext()
 
 const AppContextProvider =(props)=>{
-
+    {/**hijibji */}
 const currencySymbol = '$'
     const value={
         doctors,
@@ -11,6 +11,7 @@ const currencySymbol = '$'
     }
 
     return(
+
         <AppContext.Provider value={(value)}>
             {props.children}
         </AppContext.Provider>
