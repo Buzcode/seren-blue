@@ -33,7 +33,11 @@ import about_image from './about_image.png';
 import verified_icon from './verified_icon.png';
 import info_icon from './info_icon.png';
 import contact_image from './contact_image.png';
-
+import ac_ambulance from './ac_ambulance.png';
+import icu_ambulance from './icu_ambulance.png';
+import air_ambulance from './air_ambulance.png';
+import icu_ambulance2 from './icu_ambulance2.png';
+import icu_ambulance3 from './icu_ambulance3.png';
 
 
 
@@ -73,6 +77,11 @@ import contact_image from './contact_image.png';
         verified_icon,
         info_icon,
         contact_image,
+        ac_ambulance,
+        icu_ambulance,
+        air_ambulance,
+        icu_ambulance2,
+        icu_ambulance3,
         
     }
     export const specialityData = [

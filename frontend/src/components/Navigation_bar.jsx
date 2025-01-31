@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { assets } from '../assets/assets';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import { HiMenu } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
 
 const Navigation_bar = () => {
     const navigate = useNavigate();
+    const location = useLocation(); // Get current location
     const [showMenu, setShowMenu] = useState(false);
-    const [showProfileMenu, setShowProfileMenu] = useState(false); // New state for profile menu
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [token, setToken] = useState(true);
 
     const handleLogout = () => {
@@ -20,25 +21,33 @@ const Navigation_bar = () => {
         setShowMenu(false)
     }
 
+    const isActive = (path) => {
+        return location.pathname === path;
+    };
+
     return (
         <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
             <img onClick={() => navigate('/')} className='w-16 h-auto cursor-pointer' src={assets.logo} alt="" />
             <ul className='hidden md:flex md:items-center gap-5 font-medium'>
-                <NavLink to='/'>
-                    <li className='py-1'>HOME</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
+                <NavLink to='/' className={isActive('/') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
+                    <li className={`py-1 ${isActive('/') ? 'text-primary' : ''}`}>HOME</li> {/* Apply text-primary for active link */}
+                    <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
                 </NavLink>
-                <NavLink to='/doctors'>
-                    <li className='py-1'>ALL DOCTORS</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
+                <NavLink to='/doctors' className={isActive('/doctors') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
+                    <li className={`py-1 ${isActive('/doctors') ? 'text-primary' : ''}`}>ALL DOCTORS</li> {/* Apply text-primary for active link */}
+                    <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/doctors') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
                 </NavLink>
-                <NavLink to='/about'>
-                    <li className='py-1'>ABOUT</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
+                <NavLink to='/find-ambulance' className={isActive('/find-ambulance') ? 'text-primary' : ''}> {/* FIND AMBULANCE NavLink with active style */}
+                    <li className={`py-1 ${isActive('/find-ambulance') ? 'text-primary' : ''}`}>FIND AMBULANCE</li> {/* FIND AMBULANCE Li with active style */}
+                    <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/find-ambulance') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
                 </NavLink>
-                <NavLink to='/contact'>
-                    <li className='py-1'>CONTACT</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
+                <NavLink to='/about' className={isActive('/about') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
+                    <li className={`py-1 ${isActive('/about') ? 'text-primary' : ''}`}>ABOUT</li> {/* Apply text-primary for active link */}
+                    <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/about') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
+                </NavLink>
+                <NavLink to='/contact' className={isActive('/contact') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
+                    <li className={`py-1 ${isActive('/contact') ? 'text-primary' : ''}`}>CONTACT</li> {/* Apply text-primary for active link */}
+                    <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/contact') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
                 </NavLink>
             </ul>
 
@@ -78,14 +87,15 @@ const Navigation_bar = () => {
                                 <AiOutlineClose onClick={() => setShowMenu(false)} className='w-8 h-8 text-black cursor-pointer' />
                             </div>
                             <ul className='flex flex-col items-center gap-2 mt-5 text-lg font-medium'>
-                                <NavLink onClick={() => setShowMenu(false)} to='/'><p className='px-4 py-2 rounded  inline-block'>HOME</p></NavLink>
-                                <NavLink onClick={() => setShowMenu(false)} to='/doctors'><p className='px-4 py-2 rounded  inline-block'>ALL DOCTORS</p></NavLink>
-                                <NavLink onClick={() => setShowMenu(false)} to='/about'><p className='px-4 py-2 rounded  inline-block'>ABOUT</p></NavLink>
-                                <NavLink onClick={() => setShowMenu(false)} to='/contact'><p className='px-4 py-2 rounded  inline-block'>CONTACT</p></NavLink>
+                                <NavLink onClick={() => setShowMenu(false)} to='/' className={isActive('/') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/') ? 'text-primary' : ''}`}>HOME</p></NavLink>
+                                <NavLink onClick={() => setShowMenu(false)} to='/doctors' className={isActive('/doctors') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/doctors') ? 'text-primary' : ''}`}>ALL DOCTORS</p></NavLink>
+                                <NavLink onClick={() => setShowMenu(false)} to='/find-ambulance' className={isActive('/find-ambulance') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/find-ambulance') ? 'text-primary' : ''}`}>FIND AMBULANCE</p></NavLink> {/* FIND AMBULANCE NavLink in Mobile Menu */}
+                                <NavLink onClick={() => setShowMenu(false)} to='/about' className={isActive('/about') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/about') ? 'text-primary' : ''}`}>ABOUT</p></NavLink>
+                                <NavLink onClick={() => setShowMenu(false)} to='/contact' className={isActive('/contact') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/contact') ? 'text-primary' : ''}`}>CONTACT</p></NavLink>
                             </ul>
                         </div>
                     </div>
-                    
+
                 )}
                 {showMenu && <div className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-10 md:hidden" onClick={() => setShowMenu(false)}></div>}
             </div>

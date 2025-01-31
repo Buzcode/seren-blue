@@ -2,7 +2,7 @@ import React from 'react'
 import Header from '../components/Header'
 import SpecialityMenu from '../components/SpecialityMenu'
 import TopDoctors from '../components/TopDoctors'
-import Banner from '../components/banner'
+import Ambulance from '../pages/Ambulance' // Import the Ambulance component
 
 const Home = () => {
   return (
@@ -10,7 +10,9 @@ const Home = () => {
        <Header/>
        <SpecialityMenu/>
        <TopDoctors/>
-       <Banner/>
+       <div id="ambulance-section"> 
+         <Ambulance/> 
+       </div>
     </div>
   )
 }
