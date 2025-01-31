@@ -48,9 +48,12 @@ import icu_ambulance from './icu_ambulance.png';
 import air_ambulance from './air_ambulance.png';
 import icu_ambulance2 from './icu_ambulance2.png';
 import icu_ambulance3 from './icu_ambulance3.png';
-
-
-
+import ct_scan from './ct_scan.png';
+import blood_tests from './blood_tests.png';
+import endoscopy from './endoscopy.png';
+import ultrasound from './ultrasound.png';
+import xray from './xray.png';
+import microbiology from './microbiology.png';
 
     export const assets= {
         doctor1,
@@ -103,6 +106,12 @@ import icu_ambulance3 from './icu_ambulance3.png';
         air_ambulance,
         icu_ambulance2,
         icu_ambulance3,
+        ct_scan,
+        blood_tests,
+        endoscopy,
+        ultrasound,
+        xray,
+        microbiology,
         
     }
     export const specialityData = [
