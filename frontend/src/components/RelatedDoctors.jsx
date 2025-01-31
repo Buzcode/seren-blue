@@ -36,6 +36,7 @@ const RelatedDoctors = ({speciality,docId}) => {
                   src={item.image}
                   alt={item.name}
                   className='w-full h-full object-cover'
+                  
                 />
               </div>
               {/* Info Container with flex, centering and text styling */}
