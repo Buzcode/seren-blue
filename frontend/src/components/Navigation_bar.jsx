@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { assets } from '../assets/assets';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { HiMenu } from 'react-icons/hi';
@@ -11,33 +11,45 @@ const Navigation_bar = () => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [token, setToken] = useState(true);
 
-    const handleLogout = () => {
+    //Using useCallback to prevent recreating this function on every render
+    const handleLogout = useCallback(() => {
         setToken(false);
         setShowProfileMenu(false);
         navigate('/login');
-    };
-    const handleProfileClick = () => {
-        setShowProfileMenu(!showProfileMenu);
-        setShowMenu(false)
-    }
+    }, [navigate, setToken, setShowProfileMenu]);
 
-    const isActive = (path) => {
+    //Using useCallback to prevent recreating this function on every render
+    const handleProfileClick = useCallback(() => {
+        setShowProfileMenu((prev) => !prev);
+        setShowMenu(false);
+    }, [setShowMenu,setShowProfileMenu]);
+
+    const isActive = useCallback((path) => {
         return location.pathname === path;
-    };
+    }, [location.pathname]);
+
+
+    useEffect(() => {
+         document.body.scrollIntoView({ behavior: 'instant' }); // Scroll to the top using body element
+         setShowMenu(false);  // Reset menu state
+         setShowProfileMenu(false) // Reset profile menu state
+     }, [location,setShowMenu, setShowProfileMenu]); // Trigger when the route changes
+
+
      const stickyHeaderStyle = {
             position: 'sticky',
             top: 0,
-            zIndex: 100,
+            zIndex: 10, //Set this to a lower value than that of the modal
             backgroundColor: 'white', //  header's background color
-
         };
+    // Using useCallBack to prevent recreating this object on each render
 
     return (
         <header style={stickyHeaderStyle}>
             <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
                 <img onClick={() => navigate('/')} className='w-16 h-auto cursor-pointer' src={assets.logo} alt="" />
                 <ul className='hidden md:flex md:items-center gap-5 font-medium'>
-                    <NavLink to='/' className={isActive('/') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
+                <NavLink to='/' className={isActive('/') ? 'text-primary' : ''}> {/* Apply text-primary for active link */}
                         <li className={`py-1 ${isActive('/') ? 'text-primary' : ''}`}>HOME</li> {/* Apply text-primary for active link */}
                         <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/') ? 'block' : 'hidden'}`} /> {/* Show hr for active link */}
                     </NavLink>
@@ -67,7 +79,7 @@ const Navigation_bar = () => {
                             {showProfileMenu && (
                                 <div className='absolute top-0 right-0 mt-14 text-base font-medium text-gray-600 z-20'>
                                     <div className='min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4'>
-                                        <p onClick={() => { navigate('/MyProfile'); setShowProfileMenu(false); }} className='hover:text-black cursor-pointer'>
+                                       <p onClick={() => { navigate('/MyProfile'); setShowProfileMenu(false); }} className='hover:text-black cursor-pointer'>
                                             My Profile
                                         </p>
                                         <p onClick={() => { navigate('/my-appointments'); setShowProfileMenu(false); }} className='hover:text-black cursor-pointer'>
@@ -85,7 +97,7 @@ const Navigation_bar = () => {
                             Create account
                         </button>
                     )}
-                    <HiMenu onClick={() => { setShowMenu(!showMenu); setShowProfileMenu(false) }} className='h-6 w-6 text-zinc-700 md:hidden' />
+                    <HiMenu onClick={() => { setShowMenu((prev) => !prev); setShowProfileMenu(false) }} className='h-6 w-6 text-zinc-700 md:hidden' />
                     {/**----mobile menu----- */}
                     {showMenu && (
                         <div className={'fixed right-0 top-0 bottom-0 z-20  bg-white transition-all w-80 shadow-md md:hidden'}>
