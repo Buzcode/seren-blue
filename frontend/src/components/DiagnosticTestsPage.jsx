@@ -1,4 +1,3 @@
-// src/pages/DiagnosticTestsPage.jsx
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AvailablePlacesPage from '../components/AvailablePlacesPage';
@@ -6,10 +5,12 @@ import AvailablePlacesPage from '../components/AvailablePlacesPage';
 const DiagnosticTestsPage = () => {
   const { testCategory } = useParams();
   const [selectedTest, setSelectedTest] = useState(null);
+    const [availablePlacesData, setAvailablePlacesData] = useState(null)
 
-  const handleAvailablePlacesClick = (testName) => {
-      console.log("handleAvailablePlacesClick: testName", testName, "testCategory", testCategory);
-      setSelectedTest(testName);
+  const handleAvailablePlacesClick = (testName, availablePlaces) => {
+    console.log("handleAvailablePlacesClick: testName", testName, "testCategory", testCategory);
+    setSelectedTest(testName);
+     setAvailablePlacesData(availablePlaces)
   };
 
   const handleCloseModal = () => {
@@ -28,6 +29,7 @@ const DiagnosticTestsPage = () => {
                     {
                         name: 'Labaid Diagnostic Ltd',
                         address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                         centerId: 1,
                         branches: 10
                     }
                 ]
@@ -41,6 +43,7 @@ const DiagnosticTestsPage = () => {
                    {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                         address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                         centerId: 2,
                         branches: 12
                     }
                 ]
@@ -54,11 +57,13 @@ const DiagnosticTestsPage = () => {
                         {
                             name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                              address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 2,
                             branches: 12
                         },
                         {
                            name: 'Labaid Diagnostic Ltd',
                              address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                         }
                     ]
@@ -73,6 +78,7 @@ const DiagnosticTestsPage = () => {
                      {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                             branches: 10
                        }
                 ]
@@ -86,11 +92,13 @@ const DiagnosticTestsPage = () => {
                    {
                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
+                           centerId: 2,
+                            branches: 12
                        },
                      {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                             branches: 10
                        }
                 ]
@@ -106,7 +114,8 @@ const DiagnosticTestsPage = () => {
                     {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
+                           centerId: 2,
+                            branches: 12
                        }
                     ]
            },
@@ -119,11 +128,13 @@ const DiagnosticTestsPage = () => {
                        {
                             name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                               address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                               centerId: 2,
                             branches: 12
                         },
                      {
                           name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                       }
                   ]
@@ -138,6 +149,7 @@ const DiagnosticTestsPage = () => {
                     {
                         name: 'Labaid Diagnostic Ltd',
                           address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                           centerId: 1,
                             branches: 10
                       }
                    ]
@@ -151,6 +163,7 @@ const DiagnosticTestsPage = () => {
                      {
                           name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 2,
                             branches: 12
                        }
                   ]
@@ -164,11 +177,13 @@ const DiagnosticTestsPage = () => {
                        {
                             name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 2,
                             branches: 12
                         },
                       {
                            name: 'Labaid Diagnostic Ltd',
                              address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                        }
                  ]
@@ -184,11 +199,13 @@ const DiagnosticTestsPage = () => {
                      {
                           name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 2,
                             branches: 12
                        },
                      {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                         }
                 ]
@@ -202,6 +219,7 @@ const DiagnosticTestsPage = () => {
                       {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                        }
                  ]
@@ -215,11 +233,13 @@ const DiagnosticTestsPage = () => {
                       {
                             name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                              address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                              centerId: 2,
                             branches: 12
                        },
                       {
                             name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                        }
                 ]
@@ -233,6 +253,7 @@ const DiagnosticTestsPage = () => {
                       {
                            name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 2,
                             branches: 12
                         }
                     ]
@@ -248,6 +269,7 @@ const DiagnosticTestsPage = () => {
                      {
                          name: 'Labaid Diagnostic Ltd',
                            address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 1,
                            branches: 10
                         }
                    ]
@@ -261,11 +283,13 @@ const DiagnosticTestsPage = () => {
                      {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 2,
                             branches: 12
                       },
                      {
                          name: 'Labaid Diagnostic Ltd',
                            address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 1,
                            branches: 10
                         }
                   ]
@@ -279,6 +303,7 @@ const DiagnosticTestsPage = () => {
                     {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                           centerId: 2,
                             branches: 12
                       }
                   ]
@@ -292,6 +317,7 @@ const DiagnosticTestsPage = () => {
                      {
                           name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                        }
                    ]
@@ -305,11 +331,13 @@ const DiagnosticTestsPage = () => {
                       {
                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                             branches: 12
+                             centerId: 2,
+                            branches: 12
                         },
                      {
                           name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 1,
                            branches: 10
                         }
                     ]
@@ -325,11 +353,13 @@ const DiagnosticTestsPage = () => {
                      {
                            name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                              address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                              centerId: 2,
                             branches: 12
                          },
                      {
                            name: 'Ibn Sina Diagnostic Center',
                             address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                              centerId: 3,
                            branches: 7
                        }
                  ]
@@ -343,6 +373,7 @@ const DiagnosticTestsPage = () => {
                      {
                          name: 'Ibn Sina Diagnostic Center',
                             address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                             centerId: 3,
                             branches: 7
                         }
                    ]
@@ -356,6 +387,7 @@ const DiagnosticTestsPage = () => {
                      {
                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                           centerId: 2,
                             branches: 12
                        }
                  ]
@@ -369,11 +401,13 @@ const DiagnosticTestsPage = () => {
                      {
                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 2,
                             branches: 12
                        },
                     {
                          name: 'Ibn Sina Diagnostic Center',
                           address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 3,
                            branches: 7
                         }
                    ]
@@ -387,6 +421,7 @@ const DiagnosticTestsPage = () => {
                    {
                         name: 'Ibn Sina Diagnostic Center',
                           address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                           centerId: 3,
                             branches: 7
                        }
                   ]
@@ -402,12 +437,14 @@ const DiagnosticTestsPage = () => {
                      {
                            name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 2,
                             branches: 12
                        },
                    {
                        name: 'Ibn Sina Diagnostic Center',
                          address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 7
+                            centerId: 3,
+                           branches: 7
                        }
                    ]
             },
@@ -420,6 +457,7 @@ const DiagnosticTestsPage = () => {
                    {
                          name: 'Ibn Sina Diagnostic Center',
                            address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 3,
                            branches: 7
                       }
                  ]
@@ -433,7 +471,8 @@ const DiagnosticTestsPage = () => {
                     {
                         name: 'Ibn Sina Diagnostic Center',
                           address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 7
+                           centerId: 3,
+                            branches: 7
                         }
                    ]
            },
@@ -446,6 +485,7 @@ const DiagnosticTestsPage = () => {
                    {
                          name: 'Ibn Sina Diagnostic Center',
                            address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 3,
                            branches: 7
                      }
                  ]
@@ -459,6 +499,7 @@ const DiagnosticTestsPage = () => {
                     {
                        name: 'Ibn Sina Diagnostic Center',
                          address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
+                            centerId: 3,
                             branches: 7
                     }
                 ]
@@ -489,7 +530,7 @@ const DiagnosticTestsPage = () => {
                                     <p className="font-bold">{test.price}</p>
                                 </div>
                                 <button
-                                    onClick={() => handleAvailablePlacesClick(test.name)}
+                                    onClick={() => handleAvailablePlacesClick(test.name, test.availablePlaces)}
                                     className="bg-blue-100 text-blue-700 rounded px-4 py-2 hover:bg-blue-200"
                                 >
                                     Available Places
@@ -503,6 +544,7 @@ const DiagnosticTestsPage = () => {
                                           testName={selectedTest}
                                           testCategory={testCategory}
                                           diagnosticTests={diagnosticTests}
+                                          availablePlaces = {availablePlacesData}
                                         />
                                        <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-700 absolute top-2 right-2 text-2xl cursor-pointer">
                                             ×
