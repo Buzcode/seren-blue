@@ -17,7 +17,7 @@
              <div id="ambulance-section">
                  <Ambulance/>
              </div>
-             <div className="mt-8"> {/** Added the mt-8 class here */}
+             <div className="mt-8"> 
                <DiagnosticCare />
              </div>
              <FAQ/>

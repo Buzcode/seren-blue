@@ -1,12 +1,12 @@
 import React from 'react';
 import { assets } from '../assets/assets';
 
-const ICUAmbulanceDetails = () => {
+const AcAmbulanceDetails = () => {
     return (
         <div className="font-sans bg-sky-50"> 
-            {/* Ambulance Service Banner Section */}
+
             <div className="relative h-[500px] bg-cover bg-center rounded-lg overflow-hidden" style={{ backgroundImage: `url(${assets.ambulance_highway})` }}> {/* Banner section remains rounded and overflow hidden */}
-                <div className="absolute inset-0 bg-black opacity-70 rounded-lg"></div>
+                <div className="absolute inset-0 bg-black opacity-70 rounded-lg"></div> 
                 <div className="absolute inset-0 flex flex-col justify-center items-start text-white p-10 md:p-20">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Ambulance Service</h1>
                     <h2 className="text-2xl md:text-3xl font-semibold mb-6">Rent a <span className="text-primary">Prompt, High quality, <br />Emergency</span> Ambulance at your need</h2>
@@ -27,17 +27,17 @@ const ICUAmbulanceDetails = () => {
                 </div>
             </div>
 
-            {/* ICU Ambulance Service Content Section */}
+
             <div className="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 bg-white rounded-lg p-6 shadow-md">
-                    <h2 className="text-3xl font-semibold mb-6 text-gray-800">ICU Ambulance Service</h2>
+                <div className="md:col-span-2 bg-white rounded-lg p-6 shadow-md"> 
+                    <h2 className="text-3xl font-semibold mb-6 text-gray-800">AC Ambulance Service</h2>
                     <div className="grid grid-cols-3 gap-4 mb-6">
-                        <img src={assets.icu_ambulance} alt="ICU Ambulance" className="rounded-lg" />
-                        <img src={assets.icu_ambulance2} alt="ICU Ambulance 2" className="rounded-lg" />
-                        <img src={assets.icu_ambulance3} alt="ICU Ambulance 3" className="rounded-lg" />
+                        <img src={assets.ac_ambulance} alt="AC Ambulance" className="rounded-lg" />
+                        <img src={assets.ac_ambulance2} alt="AC Ambulance 2" className="rounded-lg" />
+                        <img src={assets.ac_ambulance3} alt="AC Ambulance 3" className="rounded-lg" />
                     </div>
                     <p className="text-gray-700 mb-6">
-                        The task of the ICU ambulance is to carry the patients who are severely injured or suffering from a heart attack, cardiac arrest, asthma attack, stroke, respiratory failure, severe bleeding, unconsciousness, seizures, burn patients, head injury, polytrauma, poisoning, diabetic emergency, etc. Our ICU ambulance is equipped with a biphasic defibrillator, ventilator, device, volumetric infusion range pumps, oxygen cylinder and the fully automatic vehicle suspension system ensures comfort and safety for the patients. We are always ready to serve the patients with all the preparations at top-notch. We ensure the patients are under observation till the time they are admitted to the nearby hospitals. Our medical technicians (e.g. doctors, paramedics, ICU specialists) diagnose the patients for critical conditions.
+                        Our AC Ambulances provide comfortable and timely transportation for patients who require medical assistance but are not in critical condition requiring intensive care.  These ambulances are equipped with air conditioning to ensure patient comfort, especially during hot weather or for patients with specific medical conditions where temperature regulation is important. AC ambulances are suitable for a wide range of non-emergency and semi-emergency situations, including inter-hospital transfers, transporting patients to diagnostic centers, or taking patients home after discharge, ensuring a smooth and comfortable journey. Our trained drivers and medical personnel prioritize patient well-being and safety during transit.
                     </p>
                     <ul className="mb-8 space-y-2">
                         <li className="flex items-center">
@@ -58,9 +58,8 @@ const ICUAmbulanceDetails = () => {
                     </button>
                 </div>
 
-                
                 <div className="bg-sky-100 p-6 rounded-lg shadow-md"> 
-                    <h3 className="text-xl font-semibold mb-4 text-gray-800">Request an ICU Ambulance</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800">Request an AC Ambulance</h3>
                     <form className="space-y-4">
                         <div>
                             <label htmlFor="fromLocation" className="block text-gray-700 text-sm font-bold mb-2">From</label>
@@ -103,4 +102,4 @@ const ICUAmbulanceDetails = () => {
     );
 };
 
-export default ICUAmbulanceDetails;
+export default AcAmbulanceDetails;

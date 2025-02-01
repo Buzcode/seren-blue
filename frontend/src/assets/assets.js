@@ -54,6 +54,10 @@ import endoscopy from './endoscopy.png';
 import ultrasound from './ultrasound.png';
 import xray from './xray.png';
 import microbiology from './microbiology.png';
+import ac_ambulance2 from './ac_ambulance2.png';
+import ac_ambulance3 from './ac_ambulance3.png';
+import air_ambulance2 from './air_ambulance2.png';
+import air_ambulance3 from './air_ambulance3.png';
 
     export const assets= {
         doctor1,
@@ -112,6 +116,10 @@ import microbiology from './microbiology.png';
         ultrasound,
         xray,
         microbiology,
+        ac_ambulance2,
+        ac_ambulance3,
+        air_ambulance2,
+        air_ambulance3,
         
     }
     export const specialityData = [

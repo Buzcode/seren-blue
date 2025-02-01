@@ -113,7 +113,7 @@ const FindAmbulancePage = () => {
                 </div>
 
                 {/* Request an Ambulance Form Section */}
-                <div className="bg-sky-100 p-6 rounded-lg shadow-md">
+                <div className="bg-sky-100 p-4 rounded-lg shadow-md h-fit"> {/* Added h-fit here and kept p-4 */}
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">Request an Ambulance</h3>
                     <form className="space-y-4">
                         <div>
