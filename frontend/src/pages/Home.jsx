@@ -5,6 +5,7 @@
  import TopDoctors from '../components/TopDoctors';
  import Ambulance from './Ambulance';
  import DiagnosticCare from '../components/DiagnosticCare';
+ import FAQ from '../pages/FAQ';
 
 
  const Home = () => {
@@ -19,7 +20,9 @@
              <div className="mt-8"> {/** Added the mt-8 class here */}
                <DiagnosticCare />
              </div>
+             <FAQ/>
         </div>
+
      );
  };
 
