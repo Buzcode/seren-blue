@@ -24,11 +24,7 @@ const DiagnosticTestsPage = () => {
                 price: 'BDT 200',
                 providers: 13,
                 availablePlaces: [
-                    {
-                        name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                        address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                        branches: 12
-                    },
+
                     {
                         name: 'Labaid Diagnostic Ltd',
                         address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -46,12 +42,7 @@ const DiagnosticTestsPage = () => {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                         address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                         branches: 12
-                    },
-                      {
-                        name: 'Labaid Diagnostic Ltd',
-                         address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 10
-                        }
+                    }
                 ]
             },
             {
@@ -78,11 +69,7 @@ const DiagnosticTestsPage = () => {
                 price: 'BDT 200',
                 providers: 14,
                 availablePlaces: [
-                     {
-                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
-                        },
+
                      {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -120,11 +107,6 @@ const DiagnosticTestsPage = () => {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                            branches: 12
-                       },
-                    {
-                         name: 'Labaid Diagnostic Ltd',
-                           address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 10
                        }
                     ]
            },
@@ -152,11 +134,7 @@ const DiagnosticTestsPage = () => {
                 price: 'BDT 2000',
                 providers: 10,
                 availablePlaces: [
-                    {
-                        name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                         address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
-                       },
+
                     {
                         name: 'Labaid Diagnostic Ltd',
                           address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -174,12 +152,7 @@ const DiagnosticTestsPage = () => {
                           name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                             branches: 12
-                       },
-                     {
-                         name: 'Labaid Diagnostic Ltd',
-                           address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 10
-                        }
+                       }
                   ]
            },
            {
@@ -226,11 +199,6 @@ const DiagnosticTestsPage = () => {
                 price: 'BDT 4000',
                  providers: 7,
                  availablePlaces: [
-                       {
-                           name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 12
-                         },
                       {
                            name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -266,12 +234,7 @@ const DiagnosticTestsPage = () => {
                            name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                             address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                             branches: 12
-                        },
-                      {
-                           name: 'Labaid Diagnostic Ltd',
-                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 10
-                       }
+                        }
                     ]
            }
        ],
@@ -282,11 +245,6 @@ const DiagnosticTestsPage = () => {
                  price: 'BDT 1200',
                 providers: 10,
                 availablePlaces: [
-                    {
-                        name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                          address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 12
-                      },
                      {
                          name: 'Labaid Diagnostic Ltd',
                            address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -322,11 +280,6 @@ const DiagnosticTestsPage = () => {
                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                             branches: 12
-                      },
-                     {
-                          name: 'Labaid Diagnostic Ltd',
-                            address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 10
                       }
                   ]
             },
@@ -336,11 +289,6 @@ const DiagnosticTestsPage = () => {
                  price: 'BDT 900',
                 providers: 10,
                   availablePlaces: [
-                      {
-                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 12
-                      },
                      {
                           name: 'Labaid Diagnostic Ltd',
                             address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -393,11 +341,6 @@ const DiagnosticTestsPage = () => {
                 providers: 14,
                  availablePlaces: [
                      {
-                           name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
-                        },
-                     {
                          name: 'Ibn Sina Diagnostic Center',
                             address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
                             branches: 7
@@ -414,11 +357,6 @@ const DiagnosticTestsPage = () => {
                          name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
                             branches: 12
-                       },
-                     {
-                          name: 'Labaid Diagnostic Ltd',
-                           address: 'House #10, Road # 1, Dhanmondi R/A, 10, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 10
                        }
                  ]
             },
@@ -446,11 +384,6 @@ const DiagnosticTestsPage = () => {
                  price: 'BDT 750',
                 providers: 12,
                 availablePlaces: [
-                      {
-                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                            address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 12
-                        },
                    {
                         name: 'Ibn Sina Diagnostic Center',
                           address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -484,11 +417,6 @@ const DiagnosticTestsPage = () => {
                  price: 'BDT 400',
                 providers: 18,
                  availablePlaces: [
-                     {
-                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                           branches: 12
-                        },
                    {
                          name: 'Ibn Sina Diagnostic Center',
                            address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
@@ -502,11 +430,6 @@ const DiagnosticTestsPage = () => {
                  price: 'BDT 600',
                 providers: 17,
                 availablePlaces: [
-                     {
-                         name: 'Popular Diagnostic Centre Ltd. | Dhanmondi',
-                           address: 'House #16, Road # 2, Dhanmondi R/A, 6, Dhanmondi, Dhaka-1205, Bangladesh',
-                            branches: 12
-                       },
                     {
                         name: 'Ibn Sina Diagnostic Center',
                           address: 'House #100, Road # 11, Dhanmondi R/A, 100, Dhanmondi, Dhaka-1205, Bangladesh',
