@@ -1,151 +1,185 @@
-    // components/CenterDetailsPage.jsx
-    import React, { useState, useEffect } from 'react';
-    import { useParams, Link } from 'react-router-dom';
-    import { BsFillTelephoneFill } from 'react-icons/bs';
-    import { HiOutlineLocationMarker } from 'react-icons/hi';
-    import { BiMessageSquareDetail } from 'react-icons/bi';
+// components/CenterDetailsPage.jsx
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, Link } from 'react-router-dom';
 
-    const CenterDetailsPage = () => {
-      const { centerName } = useParams();
-      const [centerData, setCenterData] = useState(null);
-      const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
+const CenterDetailsPage = () => {
+    const { centerName } = useParams();
+    const location = useLocation();
+    const [centerDetails, setCenterDetails] = useState(null);
+    const [selectedTestDetails, setSelectedTestDetails] = useState(null);
+    const [contactEmail, setContactEmail] = useState('info@populardiagnostic.com');
 
-      useEffect(() => {
-        const fetchCenterDetails = async () => {
-          setLoading(true);
-          setError(null);
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const testCategory = searchParams.get('testCategory');
+        const testName = searchParams.get('testName');
+        const diagnosticTestsParam = searchParams.get('diagnosticTests');
 
-          try {
-            const response = await fetch(
-              `/api/centers?centerName=${encodeURIComponent(centerName)}`
-            );
+        if (testCategory && testName && diagnosticTestsParam) {
+            try {
+                const diagnosticTests = JSON.parse(decodeURIComponent(diagnosticTestsParam));
+                let foundCenter = null;
+                let foundTestDetails = null;
 
-            if (!response.ok) {
-              if (response.status === 404) {
-                throw new Error('Center not found');
-              }
-              throw new Error(`HTTP error! status: ${response.status}`);
+                const tests = diagnosticTests[testCategory] || [];
+                foundTestDetails = tests.find((test) => test.name === testName);
+
+                if (foundTestDetails && foundTestDetails.availablePlaces) {
+                    const place = foundTestDetails.availablePlaces.find(place => place.name === decodeURIComponent(centerName));
+                    if (place) {
+                        foundCenter = place;
+                    }
+                }
+                setSelectedTestDetails(foundTestDetails);
+                setCenterDetails(foundCenter);
+
+                if (foundCenter && foundCenter.name) {
+                    const namePart = foundCenter.name.toLowerCase().split(' | ')[0].split(' ').join('');
+                    setContactEmail(`info@${namePart}.com`)
+                }
+                else
+                    setContactEmail('info@populardiagnostic.com')
+
+
+            } catch (error) {
+                console.error('Error parsing diagnosticTests:', error);
+                setCenterDetails(null);
+                setSelectedTestDetails(null);
+                setContactEmail('info@populardiagnostic.com')
             }
 
-            const data = await response.json();
-            setCenterData(data);
-          } catch (err) {
-            setError(err.message);
-            console.error('Error fetching center details:', err);
-          } finally {
-            setLoading(false);
-          }
-        };
-        fetchCenterDetails();
-      }, [centerName]);
+        } else {
+            setCenterDetails(null);
+            setSelectedTestDetails(null);
+            setContactEmail('info@populardiagnostic.com')
+        }
+    }, [centerName, location.search]);
 
+    if (!centerDetails || !selectedTestDetails) {
+        return <div>Loading or Center not found...</div>;
+    }
 
-      if (loading) {
-        return <div className="text-center my-8">Loading center details...</div>;
-      }
-
-      if (error) {
-        return <div className="text-center my-8 text-red-500">{error}</div>;
-      }
-
-      if (!centerData) {
-        return <div className="text-center my-8 text-red-500">Center not found</div>;
-      }
-
-        return (
-            <div className="container mx-auto p-4 font-sans">
-
-                <div className="flex flex-wrap  mb-8">
-
-                <div className="w-full md:w-2/3 p-4  ">
-                     <h1 className="text-2xl font-bold">{centerData.name}</h1>
-                     <p className="text-gray-600 mt-2">{centerData.yearsInService} Years in service</p>
-                </div>
-
-
-                  <div className="flex w-full md:w-1/3 p-4 gap-4 justify-around items-center ">
-                         <div className="flex flex-col items-center">
-                             <BsFillTelephoneFill  className="h-6 w-6 "/>
-                            <p className="text-sm text-center">Hotline (Open 24/7)</p>
-                           <p className="text-gray-700 font-medium text-center">{centerData.hotline}</p>
-                         </div>
-                         <div className="flex flex-col items-center">
-                             <HiOutlineLocationMarker className="h-6 w-6 "/>
-                           <p className="text-gray-700 text-sm text-center">{centerData.address}</p>
-                         </div>
-                   </div>
-
-
-                 <div className="flex w-full  md:w-2/3 p-4 gap-4 ">
-                    {centerData.services.map((service, index) => (
-                      <button key={index} className="bg-blue-100 text-blue-700 rounded px-4 py-2 ">{service}</button>
-                    ))}
-
-                </div>
-
-                    <div className="w-full md:w-1/3 p-4 gap-4 ">
-                        <a  href = {`mailto: ${centerData.email}`} className="block text-sm text-blue-500 hover:underline text-center">{centerData.email}</a>
-                        <a href="/contact" className="block text-sm text-blue-500 hover:underline text-center">More ways to contact</a>
-                    </div>
-
-                  <div className="w-full  flex justify-center  p-4  ">
-                   <Link to="#" className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        <BiMessageSquareDetail className="h-5 w-5 mr-2" />
-                       Message
-                    </Link>
-                  </div>
-
-                    <div className="w-full flex justify-center md:justify-end  p-4 mb-4 ">
-                         <iframe
-                             title="Google Map"
-                             width="300"
-                             height="200"
-                            src={centerData.googleMapEmbedUrl}
-                            allowFullScreen=""
-                             loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                         ></iframe>
-                    </div>
-
-            </div>
-
-
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Diagnostic Services</h2>
-                <Link to="/diagnostic-tests/blood-tests"  className="text-blue-500 hover:underline mb-4 block">
-                     ← Back to Diagnostic Services
-                 </Link>
-
-                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {centerData.diagnosticServices.map((service, index) => (
-                         <div key={index} className="bg-white rounded-lg p-4 shadow-md flex flex-col relative">
-                            <div className="flex justify-center  mb-4">
-                                  <img
-                                  src={service.image}
-                                 alt={service.name}
-                                  className="w-24 h-24 object-contain  mx-auto block"
-                             />
-                            </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-2">{service.name}</h3>
-                                      <p className="text-gray-700 mb-4">{service.description}</p>
-                                </div>
-                               <div className="flex items-center justify-between mt-auto">
-                                    <div className="font-bold">{service.price}</div>
-                                   <button
-                                     className="bg-blue-100 text-blue-700 rounded px-4 py-2 hover:bg-blue-200"
-                                     >
-                                           Add to Cart
-                                    </button>
-                              </div>
-                        </div>
-                    ))}
-                 </div>
-            </div>
-            </div>
-
-        );
+    const handleBookTest = () => {
+        alert('Booking feature is coming soon!');
+        // Implement booking logic here
     };
 
-    export default CenterDetailsPage;
+
+    return (
+        <div className="container mx-auto p-4">
+            {/* First part: Center Information, Contact & Address/Map */}
+            <div className="bg-white rounded-lg shadow-md mb-8">
+                <div className="p-4">
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        {/* Left Section: Center Info & Contact */}
+                        <div className="flex flex-col p-2 w-full lg:w-1/4">
+                            <h1 className="text-2xl font-bold mb-2">{centerDetails.name}</h1>
+                            <p className="text-gray-600 mb-4">28 Years in service</p>
+                            <div className='mb-4'>
+                                <div className='flex items-center mb-2'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 text-blue-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                                    </svg>
+                                    <div className='flex flex-col ml-2'>
+                                        <p className="text-gray-700 font-semibold">Hotline (Open 24/7)</p>
+                                        <p className='text-blue-600'>+8809666 787801</p>
+                                    </div>
+                                </div>
+                                <div className='flex items-center mb-2'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 text-blue-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.077 1.98l-8.478 5.233a1.5 1.5 0 01-1.422 0l-8.478-5.233A2.25 2.25 0 012.25 6.993V6.75m19.5 0a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25" />
+                                    </svg>
+                                    <div className='flex flex-col ml-2'>
+                                        <p className="text-gray-700 font-semibold">Contact us via email</p>
+                                        <p className='text-blue-600'>{contactEmail}</p>
+                                    </div>
+
+                                </div>
+                                <Link to='#' className="text-blue-500 font-semibold hover:underline">More ways to contact</Link>
+                            </div>
+                            <button
+                                onClick={handleBookTest}
+                                className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 mt-2 w-[80%]"
+                            >
+                                <span className='flex items-center justify-center'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.769 59.769 0 0121.485 12a59.77 59.77 0 01-2.736 8.876L18 12m-6 6h.01m6-6h.01m-3 6V6a3 3 0 00-3-3H9a3 3 0 00-3 3v12m6 0h.01m-3-6h.01" />
+                                    </svg>
+                                    Message
+                                </span>
+                            </button>
+
+                        </div>
+
+
+                        {/* Middle Section: Address and Map */}
+                        <div className="flex flex-col lg:flex-row w-full lg:w-3/4">
+                            <div className="w-full lg:w-1/2 p-2">
+                                <div className='flex items-start mb-2'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 text-blue-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                    <div className="ml-2">
+                                        <p className="text-gray-700 font-semibold">Address</p>
+                                        <p className='text-gray-600'> {centerDetails.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-full lg:w-1/2 p-2">
+                                <div className="relative">
+                                    <iframe
+                                        width="100%"
+                                        height="250"  // Reduced height of the map
+                                        style={{ border: 0 }}
+                                        loading="lazy"
+                                        allowFullScreen
+                                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCcutCaFBCT0I6hilC0wCcBoNZyP6p7yl0
+                                        &q=${encodeURIComponent(centerDetails.address)}`}>
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/*Second Part: Diagnostic Service & Booking */}
+            <div className="bg-white rounded-lg shadow-md">
+                <div className="p-4">
+                    <div className='flex mb-4 items-center'>
+                        <Link to="#" className='flex items-center  text-blue-600 font-bold'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                            </svg>
+
+                            Back to Diagnostic Test Services
+                        </Link>
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold mb-4">{selectedTestDetails.name}</h2>
+                        <p className="text-gray-700 mb-4">
+                            {selectedTestDetails.description}
+                        </p>
+                    </div>
+
+                    <div className='flex justify-between items-center'>
+                        <p className="text-gray-700 font-bold">{selectedTestDetails.name}</p>
+                        <span className='flex items-center text-blue-700 font-semibold'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.079.879 4.25 0l.879-.66M12 21a9 9 0 110-18 9 9 0 010 18z" />
+                            </svg>
+                            {selectedTestDetails.price}
+                        </span>
+                        <button onClick={handleBookTest} className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 ">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CenterDetailsPage;
