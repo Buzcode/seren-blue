@@ -58,6 +58,7 @@ import ac_ambulance2 from './ac_ambulance2.png';
 import ac_ambulance3 from './ac_ambulance3.png';
 import air_ambulance2 from './air_ambulance2.png';
 import air_ambulance3 from './air_ambulance3.png';
+import upload_profile from './upload_profile.png';
 
     export const assets= {
         doctor1,
@@ -120,6 +121,7 @@ import air_ambulance3 from './air_ambulance3.png';
         ac_ambulance3,
         air_ambulance2,
         air_ambulance3,
+        upload_profile,
         
     }
     export const specialityData = [

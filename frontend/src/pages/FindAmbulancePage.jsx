@@ -4,7 +4,7 @@ import { assets } from '../assets/assets';
 const FindAmbulancePage = () => {
     return (
         <div className="font-sans bg-sky-50">
-            {/* Ambulance Service Banner Section */}
+           
             <div className="relative h-[500px] bg-cover bg-center rounded-lg overflow-hidden" style={{ backgroundImage: `url(${assets.ambulance_highway})` }}>
                 <div className="absolute inset-0 bg-black opacity-70 rounded-lg"></div>
                 <div className="absolute inset-0 flex flex-col justify-center items-start text-white p-10 md:p-20">
