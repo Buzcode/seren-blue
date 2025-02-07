@@ -1,3 +1,7 @@
+import path from 'path'; // <-- ADD THIS LINE at the very top
+
+
+
 import { hashPassword } from "../utils/helpers.js";
 import User from "../model/user.js";
 import jwt from "jsonwebtoken";
@@ -32,6 +36,7 @@ export const createUser = async (req, res) => {
     username,
     displayName,
     password: hashedPassword,
+    role: 'patient', // <-- ADD THIS LINE: Set default role to 'patient'
   });
 
   try {
