@@ -19,7 +19,7 @@ import FindAmbulancePage from './pages/FindAmbulancePage';
 import DiagnosticTestsPage from './components/DiagnosticTestsPage';
 import CenterDetailsPage from './components/CenterDetailsPage';
 import DiagnosticCare from './components/DiagnosticCare';
-
+import AdminPanelPage from './pages/AdminPanelPage';
 const App = () => {
     return (
         <AuthProvider> 
@@ -31,6 +31,7 @@ const App = () => {
                     <Route path='/diagnostic-care' element={<DiagnosticCare />} />
                     <Route path='/doctors/:speciality' element={<Doctors />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='/admin-panel' element={<AdminPanelPage />} />
                     <Route path='/about' element={<About />} />
                     <Route path='/contact' element={<Contact />} />
                     <Route path='/MyProfile' element={<MyProfile />} />
@@ -43,6 +44,7 @@ const App = () => {
                     <Route path="/check-prices" element={<DiagnosticTestsPage />} />
                     <Route path="/diagnostic-tests/:testCategory" element={<DiagnosticTestsPage />} />
                     <Route path="/center-details/:centerName" element={<CenterDetailsPage />} />
+
                 </Routes>
                 <Footer />
             </div>
