@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
+//import paymentRoutes from './routes/payment.js';
 // import adminRouter from './routes/adminRout.js'; // <-- COMMENT OUT or DELETE this line
 
 // Import route files
@@ -36,3 +37,4 @@ app.get('/' , (req , res)=>{
 })
 
 app.listen(port, ()=>console.log("server started",port))
+//app.use('/api/payment', paymentRoutes); 
