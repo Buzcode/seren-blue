@@ -1,4 +1,3 @@
-// components/CenterDetailsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 

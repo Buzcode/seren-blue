@@ -1,4 +1,3 @@
-// src/components/DiagnosticCare.jsx
 import React from 'react';
 import { assets } from '../assets/assets';
 
@@ -63,8 +62,8 @@ const DiagnosticCare = () => {
               alt={test.name}
               className="w-full h-32 object-contain rounded-lg mb-2 mx-auto block"
             />
-            <div className="flex items-center justify-center flex-col"> {/* Updated to use justify-center and flex-col*/}
-              <h3 className="text-base text-gray-800 font-semibold mb-1 text-center">{test.name}</h3>  {/* Added text-center */}
+            <div className="flex items-center justify-center flex-col"> 
+              <h3 className="text-base text-gray-800 font-semibold mb-1 text-center">{test.name}</h3>  
               <p className="text-blue-500 text-sm hover:underline mt-2">
                 Check Prices
              </p>

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import Link
+import { useParams, Link } from 'react-router-dom'; 
 import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
-import { AiFillCheckCircle } from 'react-icons/ai'; // Import the icon
+import { AiFillCheckCircle } from 'react-icons/ai'; 
 import { IoInformationCircleSharp } from 'react-icons/io5';
 
 const Appointment = () => {
@@ -115,7 +115,7 @@ const Appointment = () => {
     const handleBookAppointment = () => {
         if (appointmentDetails) {
             console.log('Booking Appointment:', appointmentDetails);
-            // You can implement your booking logic here
+            
             
             alert(
                 'Appointment Booked Successfully! Check the console for appointment details'
@@ -142,7 +142,7 @@ const Appointment = () => {
                         {/*..... Doc Info : name, degree, experiance.....*/}
                         <p className="flex items-center gap-2 text-2x1 font-medium  text-gray-900">
                             {docInfo.name}
-                            <AiFillCheckCircle className='w-5 h-5 text-primary' />  {/* Replace with icon */}
+                            <AiFillCheckCircle className='w-5 h-5 text-primary' /> 
                         </p>
                         <div className="flex items-center gap-2 text-sm mt-1  text-gray-600">
                             <p>
