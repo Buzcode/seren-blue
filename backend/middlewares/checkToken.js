@@ -1,3 +1,4 @@
+// middleware/checkToken.js
 import jwt from "jsonwebtoken";
 
 const checkToken = (req, res, next) => {
@@ -7,7 +8,7 @@ const checkToken = (req, res, next) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, {}, (err, decodedUser) => { // Changed 'user' to 'decodedUser' for clarity
     if (err) {
       res.clearCookie("token", {
         httpOnly: true,
@@ -17,6 +18,10 @@ const checkToken = (req, res, next) => {
       });
       return res.status(401).json({ error: "Invalid token" });
     }
+
+    // Attach the decoded user information to the request object
+    req.user = decodedUser; // <--- ADD THIS LINE: Attach decoded user to req.user
+
     next();
   });
 };

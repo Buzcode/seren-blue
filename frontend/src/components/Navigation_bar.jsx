@@ -11,14 +11,14 @@ const Navigation_bar = () => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [token, setToken] = useState(true);
 
-    //Using useCallback to prevent recreating this function on every render
+    
     const handleLogout = useCallback(() => {
         setToken(false);
         setShowProfileMenu(false);
         navigate('/login');
     }, [navigate, setToken, setShowProfileMenu]);
 
-    //Using useCallback to prevent recreating this function on every render
+   
     const handleProfileClick = useCallback(() => {
         setShowProfileMenu((prev) => !prev);
         setShowMenu(false);
