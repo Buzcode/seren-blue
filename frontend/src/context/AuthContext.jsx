@@ -1,51 +1,45 @@
-//File location: frontend/src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { getCookie, setCookie, deleteCookie } from './utils/cookieUtils';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token') || null); // Initialize from localStorage
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decodedUser = jwtDecode(token);
-                setUser(decodedUser);
-            } catch (error) {
-                console.error('Invalid token', error);
-                localStorage.removeItem('token');
-                setUser(null);
-            }
-        }
-    }, []);
+  useEffect(() => {
+    // Update localStorage whenever the token changes
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [token]);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
-        const decodedUser = jwtDecode(token);
-        setUser(decodedUser);
-        navigate('/my-profile');
-    };
+  const login = (data) => {
+    setToken(data.token);
+    // Optionally, store other user data in state if needed
+    navigate('/'); // Redirect after login
+  };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        navigate('/');
-    };
+  const logout = () => {
+    setToken(null);
+    navigate('/login'); // Redirect after logout
+  };
 
-    const contextValue = {
-        user,
-        login,
-        logout,
-    };
+  const value = {
+    token,
+    login,
+    logout,
+  };
 
-    return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

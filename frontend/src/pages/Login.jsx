@@ -1,6 +1,6 @@
-// frontend/src/pages/Login.jsx
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
+//import { AuthContext } from '../context/AuthContext'; // Remove this line
 
 const Login = () => {
   const [state, setState] = useState('Login');
@@ -8,7 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth(); // Use the useAuth hook
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();

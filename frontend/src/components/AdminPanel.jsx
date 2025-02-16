@@ -1,5 +1,5 @@
-// frontend/src/components/AdminPanel.js
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const AdminPanel = () => {
   // State for form inputs
@@ -8,11 +8,47 @@ const AdminPanel = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('doctor'); // Default role is 'doctor'
 
-  const handleCreateUser = (event) => {
+  const { token } = useAuth(); // Get the JWT token from the AuthContext
+
+  const handleCreateUser = async (event) => {
     event.preventDefault();
-    // We will implement the API call to create user in the next step
-    console.log("Create User Form submitted with data:", { username, displayName, password, role }); // Temporary log
-    alert("Create User form submitted! (API call not yet implemented)"); // Temporary alert
+
+    try {
+      const response = await fetch('http://localhost:5001/api/admin/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include the JWT token
+        },
+        body: JSON.stringify({
+          username,
+          displayName,
+          password,
+          role,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Create user failed:', errorData);
+        alert(`Create user failed: ${errorData.error || 'Unknown error'}`); // Display error from backend
+        return;
+      }
+
+      const responseData = await response.json();
+      console.log('User created successfully:', responseData);
+      alert('User created successfully!');
+
+      // Reset the form after successful creation
+      setUsername('');
+      setDisplayName('');
+      setPassword('');
+      setRole('doctor');
+
+    } catch (error) {
+      console.error('Error creating user:', error);
+      alert('Error creating user. Please try again.');
+    }
   };
 
   return (
