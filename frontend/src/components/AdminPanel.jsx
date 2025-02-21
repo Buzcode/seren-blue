@@ -6,7 +6,7 @@ const AdminPanel = () => {
   const [username, setUsername] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('doctor'); // Default role is 'doctor'
+  const [role, setRole] = useState('doctor'); // Default role is 'doctor' - for doctor creation form
 
   const { token } = useAuth(); // Get the JWT token from the AuthContext
 
@@ -43,7 +43,7 @@ const AdminPanel = () => {
       setUsername('');
       setDisplayName('');
       setPassword('');
-      setRole('doctor');
+      setRole('doctor'); // Reset role back to 'doctor' for next doctor creation
 
     } catch (error) {
       console.error('Error creating user:', error);
@@ -111,8 +111,8 @@ const AdminPanel = () => {
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
-            <option value="doctor">Doctor</option>
-            <option value="admin">Admin</option>
+            <option value="doctor">Doctor</option> {/* Option to create 'doctor' users */}
+            <option value="admin">Admin</option>  {/* Option to create 'admin' users - if you want to add admin creation here */}
           </select>
         </div>
 

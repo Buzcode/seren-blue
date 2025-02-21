@@ -1,7 +1,7 @@
-// src/App.jsx
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext'; // <-- Import AuthProvider
+import { AuthProvider } from './context/AuthContext'; // AuthProvider
+import RequireAuth from './components/RequireAuth'; // Import RequireAuth component!  <-- IMPORT IS IMPORTANT
 import Home from './pages/Home';
 import Doctors from './pages/Doctors';
 import Login from './pages/Login';
@@ -20,9 +20,10 @@ import DiagnosticTestsPage from './components/DiagnosticTestsPage';
 import CenterDetailsPage from './components/CenterDetailsPage';
 import DiagnosticCare from './components/DiagnosticCare';
 import AdminPanelPage from './pages/AdminPanelPage';
+
 const App = () => {
     return (
-        <AuthProvider> 
+        <AuthProvider>
             <div className='mx-4 sm:mx-[10%]'>
                 <Navigation_bar />
                 <Routes>
@@ -31,7 +32,14 @@ const App = () => {
                     <Route path='/diagnostic-care' element={<DiagnosticCare />} />
                     <Route path='/doctors/:speciality' element={<Doctors />} />
                     <Route path='/login' element={<Login />} />
-                    <Route path='/admin-panel' element={<AdminPanelPage />} />
+
+                    {/* PROTECT ADMIN PANEL ROUTE */}
+                    <Route path='/admin-panel' element={
+                        <RequireAuth requiredRole="admin"> {/* Wrap AdminPanelPage with RequireAuth and set requiredRole */}
+                            <AdminPanelPage />
+                        </RequireAuth>
+                    } />
+
                     <Route path='/about' element={<About />} />
                     <Route path='/contact' element={<Contact />} />
                     <Route path='/MyProfile' element={<MyProfile />} />
