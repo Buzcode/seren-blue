@@ -1,5 +1,5 @@
-import React, { useState } from 'react'; // Removed useContext and useAuth - not directly needed in this component for cookie auth
-// import { useAuth } from '../context/AuthContext'; // You had this, but not directly used in this component based on your snippet
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const AdminPanel = () => {
     const [username, setUsername] = useState('');
