@@ -24,14 +24,15 @@ export const login = async (req, res) => {
         return res.status(400).json({ error: "Wrong password" });
     }
 
+    // MODIFIED: Hardcoded JWT_SECRET for debugging - IMPORTANT: USE THE SAME SECRET AS IN checkToken.js
     const token = jwt.sign(
         {
-            id: user.id,
+            id: user._id,
             username: user.username,
             role: user.role, // <-- This line is intended to include role
         },
-        process.env.JWT_SECRET, // <-- IMPORTANT: Using process.env.JWT_SECRET now!
-        { expiresIn: lifetime }
+        "YOUR_SECRET_KEY_DEBUG_ONLY", // <---------------------- HARDCODED SECRET - **MUST MATCH checkToken.js**
+        { expiresIn: lifetime, algorithm: 'HS256' }
     );
     console.log("User object just before JWT signing:", user);
     console.log("User role just before JWT signing:", user.role);

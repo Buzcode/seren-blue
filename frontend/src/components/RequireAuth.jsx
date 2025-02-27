@@ -1,36 +1,38 @@
-
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useLocation, Navigate } from "react-router-dom";
-import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
+import { jwtDecode } from 'jwt-decode';
+import PropTypes from 'prop-types'; 
 
 const RequireAuth = ({ children, requiredRole }) => {
-    const { token } = useContext(AuthContext); // Get token from AuthContext
+    const { token } = useContext(AuthContext);
     const location = useLocation();
 
     if (!token) {
-        // Not logged in
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     try {
-        const decodedToken = jwtDecode(token); // Decode the JWT token
-        const userRole = decodedToken.role; // Assuming your JWT payload has a 'role' claim
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.role;
 
         if (requiredRole && userRole !== requiredRole) {
-            // Logged in, but wrong role
-            console.warn(`Unauthorized access attempt. User role: ${userRole}, Required role: ${requiredRole}`); // Optional logging
-            return <Navigate to="/" replace />; // Or redirect to a "Not Authorized" page
+            console.warn(`Unauthorized access attempt. User role: ${userRole}, Required role: ${requiredRole}`);
+            return <Navigate to="/" replace />;
         }
 
-        // Logged in and has the required role (or no role is required)
         return children;
 
     } catch (error) {
-        // Token is invalid or expired
         console.error("Error decoding or verifying JWT:", error);
-        return <Navigate to="/login" state={{ from: location }} replace />; // Treat as not logged in
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
+};
+
+// Define PropTypes for RequireAuth component
+RequireAuth.propTypes = {
+    children: PropTypes.node.isRequired, // Children is required and should be renderable
+    requiredRole: PropTypes.string,       // requiredRole is a string and is optional
 };
 
 export default RequireAuth;

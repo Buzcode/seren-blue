@@ -7,7 +7,7 @@ const AdminPanel = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('Doctor'); // Default role is Doctor
 
-    // const { token } = useAuth(); // You had this -  JWT token from AuthContext - not directly used in THIS component's fetch in this example
+    const { token } = useAuth(); // Get JWT token from AuthContext
 
     const handleCreateUser = async (event) => {
         event.preventDefault(); // Prevent default form submission
@@ -20,14 +20,13 @@ const AdminPanel = () => {
         };
 
         try {
-            const response = await fetch('/api/admin/create-user', { // <-- CORRECTED URL: /api/admin/create-user (NO "-1")
+            const response = await fetch('/api/admin/create-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Authorization: `Bearer ${token}`, // You might have had this for JWT auth - not needed for cookie-based auth in THIS fetch
+                    'Authorization': `Bearer ${token}`, // <-- ADDED: Authorization header with JWT token
                 },
                 body: JSON.stringify(userData),
-                credentials: 'include', // <-- ADDED: credentials: 'include' - VERY IMPORTANT!
             });
 
             if (!response.ok) {
