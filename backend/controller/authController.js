@@ -2,7 +2,7 @@ import User from "../model/user.js";
 import { comparePassword } from "../utils/helpers.js";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET_KEY = 'YOUR_VERY_SECRET_KEY_HERE'; // <-- HARDCODED SECRET KEY - DEVELOPMENT ONLY!
+// REMOVED: const JWT_SECRET_KEY = 'YOUR_VERY_SECRET_KEY_HERE'; // <-- HARDCODED SECRET KEY - DEVELOPMENT ONLY!
 const lifetime = "3600000";
 
 export const login = async (req, res) => {
@@ -30,7 +30,7 @@ export const login = async (req, res) => {
             username: user.username,
             role: user.role, // <-- This line is intended to include role
         },
-        JWT_SECRET_KEY, // <-- HARDCODED SECRET KEY USED HERE
+        process.env.JWT_SECRET, // <-- IMPORTANT: Using process.env.JWT_SECRET now!
         { expiresIn: lifetime }
     );
     console.log("User object just before JWT signing:", user);
@@ -40,8 +40,8 @@ export const login = async (req, res) => {
     res.cookie("token", token, { // Keep setting the cookie (GOOD!)
         maxAge: lifetime,
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        // secure: true,       // <-- REMOVED or COMMENTED OUT for Test #1
+        // sameSite: "none",   // <-- REMOVED or COMMENTED OUT for Test #1
         path: "/",
     });
     console.log("Token cookie set successfully for user:", username);

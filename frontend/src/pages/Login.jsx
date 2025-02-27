@@ -25,6 +25,7 @@ const Login = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userData),
+                credentials: 'include', // <-- ADDED: credentials: 'include' HERE
             });
 
             if (!response.ok) {

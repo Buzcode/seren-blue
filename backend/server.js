@@ -17,8 +17,9 @@ const port = process.env.PORT || 5001;
 connectDB();
 connectCloudinary();
 
+
 //middlewares
-app.use(cors()); // Keep cors first
+app.use(express.urlencoded({extended: true})) // <-- MODIFIED CORS CONFIGURATION HERE
 app.use(express.json());
 app.use(cookieParser());
 
