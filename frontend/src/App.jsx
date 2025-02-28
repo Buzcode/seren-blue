@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext'; // AuthProvider
-import RequireAuth from './components/RequireAuth'; // Import RequireAuth component!  <-- IMPORT IS IMPORTANT
+import { AuthProvider } from './context/AuthContext';
+import RequireAuth from './components/RequireAuth';
 import Home from './pages/Home';
 import Doctors from './pages/Doctors';
 import Login from './pages/Login';
@@ -21,6 +21,7 @@ import CenterDetailsPage from './components/CenterDetailsPage';
 import DiagnosticCare from './components/DiagnosticCare';
 import AdminPanelPage from './pages/AdminPanelPage';
 import DoctorDashboardPage from './components/DoctorDashboardPage';
+import RegisterPage from './pages/RegisterPage'; // <-- ADDED: IMPORT RegisterPage HERE!
 
 const App = () => {
     return (
@@ -33,6 +34,8 @@ const App = () => {
                     <Route path='/diagnostic-care' element={<DiagnosticCare />} />
                     <Route path='/doctors/:speciality' element={<Doctors />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='/register' element={<RegisterPage />} /> {/* <-- Register Route - NOW WITH IMPORTED RegisterPage COMPONENT */}
+
 
                     {/* PROTECT ADMIN PANEL ROUTE */}
                     <Route path='/admin-panel' element={

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Link } from 'react-router-dom'; // <-- ADDED Link IMPORT
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -18,7 +19,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch("/api/auth/login", { // <-- CORRECTED API URL: Relative URL starting with '/api'
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,22 +98,22 @@ const Login = () => {
         {state === "Sign Up" ? (
           <p>
             Already have an account?{" "}
-            <span
-              onClick={() => setState("Login")}
+            <Link
+              to="/login"
               className="text-primary underline cursor-pointer"
             >
               Login here
-            </span>
+            </Link>
           </p>
         ) : (
           <p>
             Create a new account?{" "}
-            <span
-              onClick={() => setState("Sign Up")}
+            <Link
+              to="/register" // <-- CHANGED <span> to <Link to="/register"> to navigate to registration page
               className="text-primary underline cursor-pointer"
             >
               Click here
-            </span>
+            </Link>
           </p>
         )}
       </div>
