@@ -1,4 +1,4 @@
-// AuthContext.jsx (with console logs)
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -20,6 +20,7 @@ import DiagnosticTestsPage from './components/DiagnosticTestsPage';
 import CenterDetailsPage from './components/CenterDetailsPage';
 import DiagnosticCare from './components/DiagnosticCare';
 import AdminPanelPage from './pages/AdminPanelPage';
+import DoctorDashboardPage from './components/DoctorDashboardPage';
 
 const App = () => {
     return (
@@ -39,6 +40,13 @@ const App = () => {
                             <AdminPanelPage />
                         </RequireAuth>
                     } />
+                    
+                      {/* PROTECT DOCTOR DASHBOARD ROUTE - UPDATED IMPORT PATH */}
+                      <Route path="/doctor" element={
+                            <RequireAuth requiredRole="doctor"> {/* Use RequireAuth and set requiredRole="doctor" */}
+                                <DoctorDashboardPage /> {/* DoctorDashboardPage from 'components' directory */}
+                            </RequireAuth>
+                        } />
 
                     <Route path='/about' element={<About />} />
                     <Route path='/contact' element={<Contact />} />
