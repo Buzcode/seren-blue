@@ -4,63 +4,67 @@ import { comparePassword, hashPassword } from "../utils/helpers.js";
 import jwt from "jsonwebtoken";
 import validator from 'validator';
 
-// **IMPORTANT:** Replace "YOUR_VERY_SECRET_KEY_HERE" with a strong, randomly generated secret key!
-//              Ideally, store this in an environment variable (e.g., process.env.JWT_SECRET_KEY)
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "YOUR_VERY_SECRET_KEY_HERE";
+const JWT_SECRET_KEY = process.env.JWT_SECRET; // **FIXED: Load JWT_SECRET from environment variable**
 const lifetime = "3600000";
 
 export const login = async (req, res) => {
   console.log("Login request received at /api/auth/login");
   const { username, password } = req.body;
 
-  console.log("Username received from frontend:", username); // <--- KEEP THIS LOG
+  try { // **ADDED: try...catch block for login function**
+    const user = await User.findOne({ username }).select(["-__v"]);
 
-  // **MODIFIED QUERY for Case-Insensitive Username Lookup:**
-  const user = await User.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } }).select(["-__v"]);
+    if (!user) {
+      console.log("User NOT found in database for username:", username);
+      return res.status(404).json({ error: "Invalid credentials" }); // More general error message for security
+    }
 
-  if (!user) {
-    console.log("User NOT found in database for username:", username);
-    return res.status(404).json({ error: "User not found" });
-  }
+    const isSame = await comparePassword(password, user.password);
+    if (!isSame) {
+      console.log("Password comparison failed for username:", username);
+      return res.status(404).json({ error: "Invalid credentials" }); // More general error message for security
+    }
 
-  const isSame = await comparePassword(password, user.password);
-  if (!isSame) {
-    console.log("Password comparison failed for username:", username);
-    return res.status(400).json({ error: "Wrong password" });
-  }
-
-  const token = jwt.sign(
-    {
+    const payload = { // **Create payload object**
       id: user._id,
       username: user.username,
-      role: user.role, // Include role in JWT payload
-    },
-    JWT_SECRET_KEY,
-    { expiresIn: lifetime }
-  );
-  console.log("User object just before JWT signing:", user);
-  console.log("User role just before JWT signing:", user.role);
-  console.log("JWT Token generated successfully for user:", username);
-
-  res.cookie("token", token, {
-    maxAge: lifetime,
-    httpOnly: true,
-    secure: false, // Set to true in production if using HTTPS
-    sameSite: "lax", // Or 'none' if you need to send cookies cross-site (and set secure: true & handle SameSite=None correctly)
-    path: "/",
-  });
-  console.log("Token cookie set successfully for user:", username);
-
-  return res.status(200).json({
-    message: "Login successful",
-    token: token,
-    user: {
-      _id: user._id,
-      username: user.username,
-      displayName: user.displayName, // Assuming displayName exists in your User model
       role: user.role,
-    },
-  });
+    };
+
+    const token = jwt.sign(
+      payload,
+      JWT_SECRET_KEY, // **FIXED: Use JWT_SECRET_KEY variable (loaded from env)**
+      { algorithm: "HS256", expiresIn: lifetime } // Include algorithm and expiresIn in options
+    );
+
+    console.log("User object just before JWT signing:", user);
+    console.log("User role just before JWT signing:", user.role);
+    console.log("JWT Token generated successfully for user:", username);
+
+    res.cookie("token", token, {
+      maxAge: lifetime,
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+    });
+    console.log("Token cookie set successfully for user:", username);
+
+    return res.status(200).json({
+      message: "Login successful",
+      token: token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        displayName: user.displayName,
+        role: user.role,
+      },
+    });
+
+  } catch (error) { // **Catch any errors during login process**
+    console.error("Error during login:", error);
+    return res.status(500).json({ error: "Login failed. Please try again later." }); // 500 for server errors
+  }
 };
 
 export const register = async (req, res) => {
@@ -79,22 +83,19 @@ export const register = async (req, res) => {
   }
 
   try {
-    // 2. Check if username already exists (case-insensitive email check)
     const existingUser = await User.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
     if (existingUser) {
       return res.status(409).json({ error: "Username already exists." });
     }
 
-    // 3. Hash the password
     const hashedPassword = await hashPassword(password);
 
-    // 4. Create new user in database
     const newUser = new User({
       firstName,
       lastName,
       username,
       password: hashedPassword,
-      role: 'patient', // Default role for registered users
+      role: 'patient',
       isPatient: true,
       isActive: true,
       phone: phone || '',
@@ -106,7 +107,6 @@ export const register = async (req, res) => {
     const savedUser = await newUser.save();
     console.log("New user registered successfully:", savedUser);
 
-    // 6. Success response
     return res.status(201).json({ message: "Registration successful! Please log in." });
 
   } catch (error) {
