@@ -1,7 +1,7 @@
-// middleware/checkToken.js
+// backend/middleware/checkToken.js
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET_KEY = "YOUR_VERY_SECRET_KEY_HERE";
+const JWT_SECRET_KEY = process.env.JWT_SECRET; // **FIXED: Load secret key from environment variable**
 
 const checkToken = (req, res, next) => {
   console.log("checkToken middleware is being executed!");
@@ -14,7 +14,7 @@ const checkToken = (req, res, next) => {
 
   jwt.verify(
     token,
-    JWT_SECRET_KEY,
+    JWT_SECRET_KEY, // **CORRECTED: Use JWT_SECRET_KEY variable here for verification**
     { algorithm: "HS256" },
     (err, decodedUser) => {
       if (err) {
@@ -30,12 +30,12 @@ const checkToken = (req, res, next) => {
           .json({ error: "Invalid token - Verification failed" });
       }
 
-      // Attach the decoded user information to the request object
-      req.user = decodedUser; // Decoded user info is attached to req.user
+      // Attach the decoded user information to the request object as req.doctor (Optional renaming for clarity)
+      req.doctor = decodedUser; // **OPTIONAL: Renamed req.user to req.doctor**
 
-      // Access user ID using req.user.id (lowercase "id") - CORRECTED LINE
-      const userId = req.user.id; // <-- CHANGED to req.user.id - Access user ID using "id" claim
-      console.log("checkToken middleware - Decoded user ID:", userId); // <-- ADDED: Log decoded userId in checkToken
+      // Access doctor ID using req.doctor.id (lowercase "id") - CORRECTED LINE and OPTIONAL renaming
+      const doctorId = req.doctor.id; // <-- CHANGED to req.doctor.id and using "id" claim
+      console.log("checkToken middleware - Decoded doctor ID:", doctorId); // <-- ADDED: Log decoded doctorId in checkToken
 
       next();
     }

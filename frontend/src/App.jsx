@@ -45,11 +45,11 @@ const App = () => {
                     } />
                     
                       {/* PROTECT DOCTOR DASHBOARD ROUTE - UPDATED IMPORT PATH */}
-                      <Route path="/doctor" element={
-                            <RequireAuth requiredRole="doctor"> {/* Use RequireAuth and set requiredRole="doctor" */}
-                                <DoctorDashboardPage /> {/* DoctorDashboardPage from 'components' directory */}
-                            </RequireAuth>
-                        } />
+                      <Route path="/doctor/dashboard" element={
+    <RequireAuth requiredRole="doctor">
+        <DoctorDashboardPage />
+    </RequireAuth>
+} />
 
                     <Route path='/about' element={<About />} />
                     <Route path='/contact' element={<Contact />} />
