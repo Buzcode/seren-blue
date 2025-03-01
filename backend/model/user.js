@@ -1,7 +1,8 @@
 // backend/model/user.js
-import mongoose from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
+import validator from 'validator'; // <-- CORRECTED IMPORT - ADDED validator IMPORT
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   username: { // Email will be used as username
     type: Schema.Types.String,
     required: true,
@@ -9,7 +10,7 @@ const userSchema = new mongoose.Schema({
     trim: true, // Trim whitespace
     lowercase: true, // Store email in lowercase
     validate: { // Optional: Add more robust email validation here if needed
-      validator: validator.isEmail, // Use validator library for email validation (ensure you have 'validator' installed)
+      validator: validator.isEmail, // <-- Now validator is properly defined because of import
       message: 'Invalid email format',
     },
   },
@@ -23,7 +24,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  displayName: { // Optional display name - can be auto-generated or set by user later
+  displayName: { // Optional display name
     type: String,
     trim: true,
   },
@@ -36,11 +37,11 @@ const userSchema = new mongoose.Schema({
     enum: ['patient', 'doctor', 'admin'], 
     default: 'patient',                 
   },
-  isPatient: { // Flag to indicate if user is a patient (for public signup)
+  isPatient: { // Flag for patient users
     type: Boolean,
     default: false,
   },
-  isActive: { // Flag to indicate if account is active (e.g., for email verification or admin deactivation)
+  isActive: { // Flag for account activity
     type: Boolean,
     default: true,
   },
@@ -54,8 +55,8 @@ const userSchema = new mongoose.Schema({
   },
   gender: { // Added gender field
     type: String,
-    enum: ['Male', 'Female', 'Other', ''], // Allowed gender values, include '' for "not specified"
-    default: '', // Default gender is "not specified"
+    enum: ['Male', 'Female', 'Other', ''], 
+    default: '', 
   },
   birthDate: { // Added birthDate field
     type: Date,
