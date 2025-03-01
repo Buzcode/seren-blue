@@ -1,100 +1,44 @@
-import path from 'path'; // <-- ADD THIS LINE at the very top
+import path from 'path'; 
+
+import User from "../model/user.js"; 
+
+export const getAllUsers = async (req, res) => { /* ... your code ... */ };
+export const getProfile = async (req, res) => { /* ... your code ... */ };
+export const createUser = async (req, res) => { /* ... your code ... */ };
+export const updatedUser = async (req, res) => { /* ... your code ... */ };
+export const deleteUser = async (req, res) => { /* ... your code ... */ };
+export const deleteAllUsers = async (req, res) => { /* ... your code ... */ };
 
 
+export const getUserProfileController = async (req, res) => { 
+    try {
+      // Access user ID using req.user.id (lowercase "id") - CORRECTED LINE
+      const userId = req.user.id; // <-- CHANGED to req.user.id - Access user ID using "id" claim
 
-import { hashPassword } from "../utils/helpers.js";
-import User from "../model/user.js";
-import jwt from "jsonwebtoken";
+      console.log("getUserProfileController - Start: Fetching profile for user ID:", userId); 
 
-export const getAllUsers = async (req, res) => {
-  try {
-    const allUsers = await User.find().select(["-password", "-__v"]);
-    return res.status(200).json(allUsers);
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
+      // Log the userId just before querying the database - VERY IMPORTANT
+      console.log("getUserProfileController - Before User.findById - userId value:", userId); 
 
-export const getProfile = async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    const user = jwt.verify(token, process.env.JWT_SECRET);
+      // Fetch user profile from database using userId
+      const userProfile = await User.findById(userId).select('-password -__v'); 
 
-    const userInfo = await User.findById(user.id).select(["-__v"]);
-    return res.status(200).json(userInfo);
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
+      // Log the userProfile object IMMEDIATELY after fetching from database - VERY IMPORTANT
+      console.log("getUserProfileController - After User.findById - userProfile value:", userProfile);
 
-export const createUser = async (req, res) => {
-  const { username, displayName, password } = req.body;
-
-  const hashedPassword = await hashPassword(password);
-
-  const newUser = new User({
-    username,
-    displayName,
-    password: hashedPassword,
-    role: 'patient', // <-- ADD THIS LINE: Set default role to 'patient'
-  });
-
-  try {
-    const otherUser = await User.findOne({ username }).select(["username"]);
-
-    if (otherUser) {
-      return res.status(400).json({ error: "Username already in use" });
-    }
-    const savedUser = await newUser.save();
-    return res.status(201).json({ message: "New user added successfully" });
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
-
-export const updatedUser = async (req, res) => {
-  const { displayName, username, password } = req.body;
-  const { id } = req.params;
-
-  const hashedPassword = await hashPassword(password);
-
-  try {
-    const anotherUser = await User.findOne({ username }).select("_id").lean();
-
-    if (anotherUser && anotherUser._id.toString() !== id) {
-      return res.status(400).json({ error: "Username already in use" });
-    }
-
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: id },
-      { username, displayName, password: hashedPassword },
-      {
-        new: true,
+      if (!userProfile) {
+        console.log("getUserProfileController - User profile NOT found in database for ID:", userId); 
+        return res.status(404).json({ error: "User profile not found" }); 
       }
-    ).select("-__v");
 
-    return res.status(200).json(updatedUser);
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
+      console.log("getUserProfileController - User profile FOUND and fetched successfully:", userProfile);
 
-export const deleteUser = async (req, res) => {
-  const { id } = req.params;
+      res.json(userProfile); 
+      console.log("getUserProfileController - Response sent successfully.");
 
-  try {
-    await User.deleteOne({ _id: id });
-    return res.status(200).json({ message: "User deleted" });
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
-
-export const deleteAllUsers = async (req, res) => {
-  try {
-    await User.deleteMany();
-    return res.status(200).json({ message: "All users deleted" });
-  } catch (err) {
-    return res.status(400).json(err);
-  }
-};
+    } catch (error) {
+      console.error("getUserProfileController - Error fetching user profile - Error:", error); 
+      res.status(500).json({ error: "Failed to fetch user profile" }); 
+      console.error("getUserProfileController - Error response sent.");
+    }
+  };

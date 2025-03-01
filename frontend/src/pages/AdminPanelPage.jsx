@@ -37,13 +37,6 @@ const AdminPanelPage = () => {
   console.log("AdminPanelPage - Authorized, rendering Admin Panel."); // <--- ADD THIS LOG
   return (
     <div>
-      <h1>Admin Panel Page</h1>
-      {userRole === 'admin' && (
-        <div style={{ backgroundColor: '#e0f7fa', padding: '10px', marginBottom: '20px', border: '1px solid #b2ebf2', borderRadius: '5px', textAlign: 'center', color: '#0097a7' }}>
-          <strong><i className="fas fa-shield-alt"></i> You are logged in as Admin. <i className="fas fa-shield-alt"></i></strong>
-        </div>
-      )}
-      <p>Welcome to the Admin Panel.</p>
       <AdminPanel />
     </div>
   );

@@ -56,7 +56,7 @@ const AdminPanel = () => {
   return (
     <div>
       <h2>Admin Panel</h2>
-      <p>Welcome to the Admin Panel. Here you can manage users.</p>
+      <p>Here you can manage users.</p>
 
       <form onSubmit={handleCreateUser} className="max-w-md mt-4">
         <div className="mb-4">

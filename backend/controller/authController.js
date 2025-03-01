@@ -1,22 +1,16 @@
 import User from "../model/user.js";
-import { comparePassword, hashPassword } from "../utils/helpers.js"; // Import hashPassword helper
+import { comparePassword, hashPassword } from "../utils/helpers.js";
 import jwt from "jsonwebtoken";
-import validator from 'validator'; // Import validator for email validation (npm install validator)
+import validator from 'validator';
 
-const JWT_SECRET_KEY = "YOUR_VERY_SECRET_KEY_HERE"; // <-- HARDCODED SECRET KEY - DEVELOPMENT ONLY!
+const JWT_SECRET_KEY = "YOUR_VERY_SECRET_KEY_HERE";
 const lifetime = "3600000";
 
 export const login = async (req, res) => {
-  // ... (your existing login function code - no changes needed) ...
   console.log("Login request received at /api/auth/login");
   const { username, password } = req.body;
-  console.log("Username received:", username);
-  console.log(
-    "Password received (plain text - for debugging only!):",
-    password
-  );
 
-  const user = await User.findOne({ username: username }).select(["-__v"]);
+  const user = await User.findOne({ username }).select(["-__v"]);
 
   if (!user) {
     console.log("User NOT found in database for username:", username);
@@ -31,7 +25,7 @@ export const login = async (req, res) => {
 
   const token = jwt.sign(
     {
-      id: user.id,
+      id: user._id,
       username: user.username,
       role: user.role, // <-- This line is intended to include role
     },
@@ -43,11 +37,11 @@ export const login = async (req, res) => {
   console.log("JWT Token generated successfully for user:", username);
 
   res.cookie("token", token, {
-    // Cookie settings - CHANGED sameSite to "lax" for Test 1
+    // Keep setting the cookie (GOOD!)
     maxAge: lifetime,
     httpOnly: true,
-    secure: false,  // <-- Keep secure: false for testing on HTTP localhost
-    sameSite: "lax", // <-- CHANGED sameSite to "lax" for Test 1
+    secure: false,
+    sameSite: "lax",
     path: "/",
   });
   console.log("Token cookie set successfully for user:", username);
@@ -68,13 +62,13 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   console.log("Registration request received at /api/auth/register");
-  const { firstName, lastName, username, password } = req.body;
+  const { firstName, lastName, username, password, phone, addressLine1, addressLine2, gender, birthDate } = req.body; // <-- EXTRACTED new fields from req.body
 
-  // 1. Backend Input Validation (using validator library for email)
+  // 1. Backend Input Validation (using validator library for email) - UPDATED VALIDATION
   if (!firstName || !lastName || !username || !password) {
-    return res.status(400).json({ error: "All fields are required." }); // 400 Bad Request for missing fields
+    return res.status(400).json({ error: "All required fields are missing." }); // More general message
   }
-  if (!validator.isEmail(username)) { // Validate email format
+  if (!validator.isEmail(username)) {
     return res.status(400).json({ error: "Invalid email format." }); // 400 Bad Request for invalid email
   }
   if (password.length < 6) {
@@ -91,7 +85,7 @@ export const register = async (req, res) => {
     // 3. Hash the password
     const hashedPassword = await hashPassword(password); // Assuming you have hashPassword helper
 
-    // 4. Create new user in database
+    // 4. Create new user in database - UPDATED User CREATION - Include new fields
     const newUser = new User({
       firstName,
       lastName,
@@ -100,7 +94,10 @@ export const register = async (req, res) => {
       role: 'patient', // Default role for registered users is 'patient'
       isPatient: true, // Set isPatient flag
       isActive: true, // Set isActive flag (optional - for account activation)
-      // ... other user fields ...
+      phone: phone || '', // Include phone, default to empty string if not provided
+      address: { line1: addressLine1 || '', line2: addressLine2 || '' }, // Include address object, default to empty strings if not provided
+      gender: gender || '', // Include gender, default to empty string if not provided
+      birthDate: birthDate || null, // Include birthDate, default to null if not provided
     });
 
     const savedUser = await newUser.save();
@@ -117,7 +114,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
+export const logout = (req, res) => { // <-- INCLUDED LOGOUT FUNCTION HERE
   res.clearCookie("token", {
     httpOnly: true,
     secure: true,

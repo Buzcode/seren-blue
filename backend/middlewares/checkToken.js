@@ -1,15 +1,15 @@
 // middleware/checkToken.js
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET_KEY = "YOUR_VERY_SECRET_KEY_HERE"; // <-- HARDCODED SECRET KEY - DEVELOPMENT ONLY! - MUST MATCH authController.js!
+const JWT_SECRET_KEY = "YOUR_VERY_SECRET_KEY_HERE";
 
 const checkToken = (req, res, next) => {
-  console.log("checkToken middleware is being executed!"); // <-- ADD THIS console.log AT THE BEGINNING
+  console.log("checkToken middleware is being executed!");
 
   const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ error: "Invalid token - No token provided" }); // More specific message for no token
+    return res.status(401).json({ error: "Invalid token - No token provided" });
   }
 
   jwt.verify(
@@ -17,9 +17,8 @@ const checkToken = (req, res, next) => {
     JWT_SECRET_KEY,
     { algorithm: "HS256" },
     (err, decodedUser) => {
-      // <-- ADDED: algorithm: 'HS256' option here!
       if (err) {
-        console.error("JWT Verification Error:", err); // <-- ADDED: Log the specific error to server console
+        console.error("JWT Verification Error:", err);
         res.clearCookie("token", {
           httpOnly: true,
           secure: true,
@@ -28,11 +27,15 @@ const checkToken = (req, res, next) => {
         });
         return res
           .status(401)
-          .json({ error: "Invalid token - Verification failed" }); // More specific message for verification failure
+          .json({ error: "Invalid token - Verification failed" });
       }
 
       // Attach the decoded user information to the request object
-      req.user = decodedUser; // <--- ADD THIS LINE: Attach decoded user to req.user
+      req.user = decodedUser; // Decoded user info is attached to req.user
+
+      // Access user ID using req.user.id (lowercase "id") - CORRECTED LINE
+      const userId = req.user.id; // <-- CHANGED to req.user.id - Access user ID using "id" claim
+      console.log("checkToken middleware - Decoded user ID:", userId); // <-- ADDED: Log decoded userId in checkToken
 
       next();
     }
