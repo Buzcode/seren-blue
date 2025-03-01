@@ -4,13 +4,13 @@ import { hashPassword } from "../utils/helpers.js";
 
 export const createUserController = async (req, res) => {
   try {
-    const { username, displayName, password, role } = req.body;
+    const { username, firstName, lastName, displayName, password, role, gender } = req.body; // <-- Extracted gender from req.body
 
     // Basic input validation (you can add more robust validation)
-    if (!username || !password || !role) {
+    if (!username || !firstName || !lastName || !password || !role || !gender) { // <-- Included gender in required fields check
       return res
         .status(400)
-        .json({ error: "Username, password, and role are required." });
+        .json({ error: "Username, First Name, Last Name, password, role, and gender are required." }); // <-- Updated error message
     }
 
     if (!["doctor", "admin"].includes(role)) {
@@ -35,9 +35,12 @@ export const createUserController = async (req, res) => {
     // Create new user
     const newUser = new User({
       username,
+      firstName,
+      lastName,
       displayName,
       password: hashedPassword,
       role, // Role is taken from the request body (admin will select 'doctor' or 'admin')
+      gender,     // Included gender in newUser object
     });
 
     await newUser.save();

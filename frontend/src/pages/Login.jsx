@@ -23,7 +23,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("http://localhost:5001/api/auth/login", { // <--- CORRECTED URL!
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +31,7 @@ const Login = () => {
         body: JSON.stringify(userData),
         credentials: "include",
       });
-
+      
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Login failed:", errorData);

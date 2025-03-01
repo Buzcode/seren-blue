@@ -10,7 +10,7 @@ const userSchema = new Schema({
     trim: true, // Trim whitespace
     lowercase: true, // Store email in lowercase
     validate: { // Optional: Add more robust email validation here if needed
-      validator: validator.isEmail, // <-- Now validator is properly defined because of import
+      validator: validator.isEmail, 
       message: 'Invalid email format',
     },
   },
@@ -32,10 +32,10 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     required: true,
   },
-  role: { 
+  role: {
     type: String,
-    enum: ['patient', 'doctor', 'admin'], 
-    default: 'patient',                 
+    enum: ['patient', 'doctor', 'admin'],
+    default: 'patient',
   },
   isPatient: { // Flag for patient users
     type: Boolean,
@@ -55,8 +55,9 @@ const userSchema = new Schema({
   },
   gender: { // Added gender field
     type: String,
-    enum: ['Male', 'Female', 'Other', ''], 
-    default: '', 
+    enum: ['Male', 'Female', 'Other', ''],
+    required: true,  // <--- ADDED required: true to make Gender MANDATORY in database
+    default: '',
   },
   birthDate: { // Added birthDate field
     type: Date,
