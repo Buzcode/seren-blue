@@ -22,7 +22,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", { // <--- CORRECTED URL!
+      const response = await fetch("http://localhost:5001/api/auth/login", { 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,12 +42,12 @@ const Login = () => {
       console.log("Login successful:", responseData);
       login(responseData);
 
-      const userRole = responseData.user.role; // Get user role from response
+      const userRole = responseData.user.role; 
 
       if (userRole === 'doctor') {
-        setRedirectTo('/doctor/dashboard'); // Redirect doctor to dashboard
+        setRedirectTo('/doctor/dashboard'); 
       } else {
-        setRedirectTo('/MyProfile'); // Redirect other users to MyProfile
+        setRedirectTo('/MyProfile'); 
       }
 
     } catch (error) {
@@ -62,7 +62,7 @@ const Login = () => {
 
   return (
     <form className="min-h-[80vh] flex items-center" onSubmit={onSubmitHandler}>
-      {/* ... (rest of your Login form UI - no changes needed) ... */}
+    
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg">
         <p className="text-2xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}

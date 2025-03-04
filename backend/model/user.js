@@ -1,18 +1,12 @@
-// backend/model/user.js
 import mongoose, { Schema, model } from 'mongoose';
-import validator from 'validator'; // <-- CORRECTED IMPORT - ADDED validator IMPORT
+import validator from 'validator'; 
 
 const userSchema = new Schema({
-  username: { // Email will be used as username
+  username: {
     type: Schema.Types.String,
     required: true,
     unique: true,
-    trim: true, // Trim whitespace
-    lowercase: true, // Store email in lowercase
-    validate: { // Optional: Add more robust email validation here if needed
-      validator: validator.isEmail, 
-      message: 'Invalid email format',
-    },
+    trim: true, 
   },
   firstName: {
     type: String,
@@ -24,7 +18,7 @@ const userSchema = new Schema({
     required: true,
     trim: true,
   },
-  displayName: { // Optional display name
+  displayName: { 
     type: String,
     trim: true,
   },
@@ -37,29 +31,29 @@ const userSchema = new Schema({
     enum: ['patient', 'doctor', 'admin'],
     default: 'patient',
   },
-  isPatient: { // Flag for patient users
+  isPatient: { 
     type: Boolean,
     default: false,
   },
-  isActive: { // Flag for account activity
+  isActive: { 
     type: Boolean,
     default: true,
   },
-  phone: { // Added phone field
+  phone: { 
     type: String,
     trim: true,
   },
-  address: { // Added address object
+  address: { 
     line1: { type: String, trim: true },
     line2: { type: String, trim: true },
   },
-  gender: { // Added gender field
+  gender: { 
     type: String,
     enum: ['Male', 'Female', 'Other', ''],
-    required: true,  // <--- ADDED required: true to make Gender MANDATORY in database
+    required: true,  
     default: '',
   },
-  birthDate: { // Added birthDate field
+  birthDate: { 
     type: Date,
   },
 }, { timestamps: true });

@@ -1,31 +1,30 @@
-// authController.js
 import User from "../model/user.js";
 import { comparePassword, hashPassword } from "../utils/helpers.js";
 import jwt from "jsonwebtoken";
 import validator from 'validator';
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET; // **FIXED: Load JWT_SECRET from environment variable**
+const JWT_SECRET_KEY = process.env.JWT_SECRET; 
 const lifetime = "3600000";
 
 export const login = async (req, res) => {
   console.log("Login request received at /api/auth/login");
   const { username, password } = req.body;
 
-  try { // **ADDED: try...catch block for login function**
+  try { 
     const user = await User.findOne({ username }).select(["-__v"]);
 
     if (!user) {
       console.log("User NOT found in database for username:", username);
-      return res.status(404).json({ error: "Invalid credentials" }); // More general error message for security
+      return res.status(404).json({ error: "Invalid credentials" }); 
     }
 
     const isSame = await comparePassword(password, user.password);
     if (!isSame) {
       console.log("Password comparison failed for username:", username);
-      return res.status(404).json({ error: "Invalid credentials" }); // More general error message for security
+      return res.status(404).json({ error: "Invalid credentials" }); 
     }
 
-    const payload = { // **Create payload object**
+    const payload = { 
       id: user._id,
       username: user.username,
       role: user.role,
@@ -33,8 +32,8 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
       payload,
-      JWT_SECRET_KEY, // **FIXED: Use JWT_SECRET_KEY variable (loaded from env)**
-      { algorithm: "HS256", expiresIn: lifetime } // Include algorithm and expiresIn in options
+      JWT_SECRET_KEY, 
+      { algorithm: "HS256", expiresIn: lifetime } 
     );
 
     console.log("User object just before JWT signing:", user);
@@ -61,7 +60,7 @@ export const login = async (req, res) => {
       },
     });
 
-  } catch (error) { // **Catch any errors during login process**
+  } catch (error) { 
     console.error("Error during login:", error);
     return res.status(500).json({ error: "Login failed. Please try again later." }); // 500 for server errors
   }
@@ -71,7 +70,7 @@ export const register = async (req, res) => {
   console.log("Registration request received at /api/auth/register");
   const { firstName, lastName, username, password, phone, addressLine1, addressLine2, gender, birthDate } = req.body;
 
-  // 1. Backend Input Validation
+  
   if (!firstName || !lastName || !username || !password) {
     return res.status(400).json({ error: "All required fields are missing." });
   }
@@ -118,8 +117,8 @@ export const register = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true, // Set to true in production if using HTTPS
-    sameSite: "none", // Or 'lax' depending on your needs
+    secure: true, 
+    sameSite: "none",
     path: "/",
   });
   return res.status(200).json({ message: "Logout successful" });
