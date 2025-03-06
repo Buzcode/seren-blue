@@ -1,51 +1,49 @@
-//File location: frontend/src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { getCookie, setCookie, deleteCookie } from './utils/cookieUtils';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decodedUser = jwtDecode(token);
-                setUser(decodedUser);
-            } catch (error) {
-                console.error('Invalid token', error);
-                localStorage.removeItem('token');
-                setUser(null);
-            }
-        }
-    }, []);
+  useEffect(() => {
+    console.log("AuthContext useEffect - Token changed:", token); // <--- ADD THIS LOG
+    if (token) {
+      localStorage.setItem('token', token);
+      console.log("AuthContext useEffect - Token set in localStorage:", token); // <--- ADD THIS LOG
+    } else {
+      localStorage.removeItem('token');
+      console.log("AuthContext useEffect - Token removed from localStorage."); // <--- ADD THIS LOG
+    }
+  }, [token]);
 
-    const login = (token) => {
-        localStorage.setItem('token', token);
-        const decodedUser = jwtDecode(token);
-        setUser(decodedUser);
-        navigate('/my-profile');
-    };
+  const login = (data) => {
+    setToken(data.token);
+    console.log("AuthContext login - Token set:", data.token); // <--- ADD THIS LOG
+    navigate('/');
+  };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        navigate('/');
-    };
+  const logout = () => {
+    setToken(null);
+    console.log("AuthContext logout - Token set to null."); // <--- ADD THIS LOG
+    navigate('/login');
+  };
 
-    const contextValue = {
-        user,
-        login,
-        logout,
-    };
+  const value = {
+    token,
+    login,
+    logout,
+  };
 
-    return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

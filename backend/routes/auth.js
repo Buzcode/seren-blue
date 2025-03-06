@@ -1,12 +1,14 @@
 import express from "express";
-import { login, logout } from "../controller/authController.js";
-import checkToken from "../middlewares/checkToken.js";
-import authorizeRole from "../middlewares/authorizeRole.js"; // Import authorizeRole
+import { login, register, logout } from "../controller/authController.js"; 
 
 const router = express.Router();
 
+
 router.post("/login", login);
 
-router.post("/logout", checkToken, logout); // Keep checkToken for logout (ensure user is logged in to logout)
+router.post("/register", register);
+
+
+router.post("/logout", logout);
 
 export default router;

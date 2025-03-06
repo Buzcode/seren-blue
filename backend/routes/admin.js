@@ -7,6 +7,11 @@ import { createUserController } from "../controller/adminController.js"; // We w
 const router = express.Router();
 
 // Route for admins to create new users (doctors, admins)
-router.post('/create-user', checkToken, authorizeRole('admin'), createUserController);
+router.post(
+  "/create-user",
+  checkToken,
+  authorizeRole("admin"),
+  createUserController
+);
 
 export default router;
