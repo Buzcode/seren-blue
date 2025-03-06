@@ -10,10 +10,12 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import adminRoutes from './routes/admin.js'; // Import admin routes
 import cookieParser from 'cookie-parser';
+import paymentRoutes from "./routes/payment.js";
 
 //app config
 const app = express();
 const port = process.env.PORT || 5001;
+//const paymentRoutes = require("./routes/payment");
 connectDB();
 connectCloudinary();
 
@@ -21,7 +23,7 @@ connectCloudinary();
 app.use(cors()); // Keep cors first
 app.use(express.json());
 app.use(cookieParser());
-
+app.use("/api/payment", paymentRoutes);
 //api endpoint
 
 // Mount route files
