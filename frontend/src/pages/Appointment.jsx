@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; 
+import { useParams, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
-import { AiFillCheckCircle } from 'react-icons/ai'; 
+import { AiFillCheckCircle } from 'react-icons/ai';
 import { IoInformationCircleSharp } from 'react-icons/io5';
+
 
 const Appointment = () => {
     const { docId } = useParams();
     const { doctors, currencySymbol } = useContext(AppContext);
     const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
 
     const [docInfo, setDocInfo] = useState(null);
     const [docSlots, setDocSlots] = useState([]);
@@ -16,12 +18,20 @@ const Appointment = () => {
     const [selectedTime, setSelectedTime] = useState('');
     const [appointmentDetails, setAppointmentDetails] = useState(null);
     const [relatedDoctors, setRelatedDoctors] = useState([]);
+    const { bookedAppointments, setBookedAppointments } = useContext(AppContext);
+    const { bookAppointment } = useContext(AppContext); 
+
+
+   
+
+
 
 
     const fetchDocInfo = async () => {
         const docInfo = doctors.find((doc) => doc._id === docId);
         setDocInfo(docInfo);
     };
+
 
     const getRelatedDoctors = async () => {
         if (docInfo) {
@@ -32,21 +42,28 @@ const Appointment = () => {
 
 
 
+
+
+
     const getAvailableSlots = async () => {
         setDocSlots([]);
 
+
         //getting current date
         let today = new Date();
+
 
         for (let i = 0; i < 7; i++) {
             //getting date with index
             let currentDate = new Date(today);
             currentDate.setDate(today.getDate() + i);
 
+
             //setting end time of the date with index
             let endTime = new Date();
             endTime.setDate(today.getDate() + i);
             endTime.setHours(21, 0, 0, 0);
+
 
             //setting hours
             if (today.getDate() === currentDate.getDate()) {
@@ -59,7 +76,9 @@ const Appointment = () => {
                 currentDate.setMinutes(0);
             }
 
+
             let timeSlots = [];
+
 
             while (currentDate < endTime) {
                 let formattedTime = currentDate.toLocaleTimeString([], {
@@ -67,31 +86,38 @@ const Appointment = () => {
                     minute: '2-digit',
                 });
 
+
                 //add slot to array
                 timeSlots.push({
                     datetime: new Date(currentDate),
                     time: formattedTime,
                 });
 
+
                 //increment current time by 30 minutes
                 currentDate.setMinutes(currentDate.getMinutes() + 30);
             }
+
 
             setDocSlots((prev) => [...prev, timeSlots]);
         }
     };
 
+
     useEffect(() => {
         fetchDocInfo();
     }, [doctors, docId]);
+
 
     useEffect(() => {
         getRelatedDoctors()
     }, [docInfo, doctors]);
 
+
     useEffect(() => {
         getAvailableSlots();
     }, [docInfo]);
+
 
     useEffect(() => {
         if (selectedDateIndex != null && selectedTime) {
@@ -112,16 +138,14 @@ const Appointment = () => {
         }
     }, [selectedDateIndex, selectedTime, docInfo]);
 
+
+    
     const handleBookAppointment = () => {
         if (appointmentDetails) {
-            console.log('Booking Appointment:', appointmentDetails);
-            
-            
-            alert(
-                'Appointment Booked Successfully! Check the console for appointment details'
-            );
+            bookAppointment(appointmentDetails); // Store appointment in context
+            alert("Appointment Booked Successfully!");
         } else {
-            alert('Please select both a date and a time before booking');
+            alert("Please select both a date and a time before booking");
         }
     };
 
@@ -138,11 +162,12 @@ const Appointment = () => {
                         />
                     </div>
 
+
                     <div className="flex-1 border border-gray-400 rounded-1g p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0">
                         {/*..... Doc Info : name, degree, experiance.....*/}
                         <p className="flex items-center gap-2 text-2x1 font-medium  text-gray-900">
                             {docInfo.name}
-                            <AiFillCheckCircle className='w-5 h-5 text-primary' /> 
+                            <AiFillCheckCircle className='w-5 h-5 text-primary' />
                         </p>
                         <div className="flex items-center gap-2 text-sm mt-1  text-gray-600">
                             <p>
@@ -152,6 +177,7 @@ const Appointment = () => {
                                 {docInfo.experience}
                             </button>
                         </div>
+
 
                         {/*........Doctord About........*/}
                         <div>
@@ -171,6 +197,7 @@ const Appointment = () => {
                         </p>
                     </div>
                 </div>
+
 
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
@@ -218,10 +245,13 @@ const Appointment = () => {
                 </div>
 
 
+
+
                 {/*........ Related Doctors........*/}
                 <div className='mt-8 text-gray-700'>
                     <h3 className='font-bold text-2xl mt-8'>Related Doctors</h3>
                     <p className='font-medium mt-1'>Simply browse through our extensive list of trusted doctors.</p>
+
 
                     <div className='flex gap-5 mt-5 flex-wrap'>
                         {relatedDoctors.map((doc) => (
@@ -240,5 +270,6 @@ const Appointment = () => {
         )
     );
 };
+
 
 export default Appointment;
