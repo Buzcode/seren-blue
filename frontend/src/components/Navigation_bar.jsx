@@ -3,21 +3,19 @@ import { assets } from '../assets/assets';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { HiMenu } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useAuth } from '../context/AuthContext'; // <--- IMPORT useAuth
+import { useAuth } from '../context/AuthContext';
 
 const Navigation_bar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [showMenu, setShowMenu] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
-    // const [token, setToken] = useState(true);  <--- REMOVE this local token state
-    const { token, logout } = useAuth(); // <--- Get token and logout from AuthContext
+    const { token, logout } = useAuth();
 
     const handleLogout = useCallback(() => {
-        logout(); // <--- CORRECT! Call the logout() function from AuthContext
+        logout();
         setShowProfileMenu(false);
-    }, [logout, setShowProfileMenu]); // <--- Update dependency array to include logout
-
+    }, [logout, setShowProfileMenu]);
 
     const handleProfileClick = useCallback(() => {
         setShowProfileMenu((prev) => !prev);
@@ -28,13 +26,11 @@ const Navigation_bar = () => {
         return location.pathname === path;
     }, [location.pathname]);
 
-
     useEffect(() => {
          document.body.scrollIntoView({ behavior: 'instant' });
          setShowMenu(false);
          setShowProfileMenu(false)
      }, [location,setShowMenu, setShowProfileMenu]);
-
 
      const stickyHeaderStyle = {
             position: 'sticky',
@@ -43,13 +39,12 @@ const Navigation_bar = () => {
             backgroundColor: 'white',
         };
 
-
     return (
         <header style={stickyHeaderStyle}>
             <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
                 <img onClick={() => navigate('/')} className='w-16 h-auto cursor-pointer' src={assets.logo} alt="" />
                 <ul className='hidden md:flex md:items-center gap-5 font-medium'>
-                <NavLink to='/' className={isActive('/') ? 'text-primary' : ''}>
+                    <NavLink to='/' className={isActive('/') ? 'text-primary' : ''}>
                         <li className={`py-1 ${isActive('/') ? 'text-primary' : ''}`}>HOME</li>
                         <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/') ? 'block' : 'hidden'}`} />
                     </NavLink>
@@ -60,6 +55,11 @@ const Navigation_bar = () => {
                     <NavLink to='/find-ambulance' className={isActive('/find-ambulance') ? 'text-primary' : ''}>
                         <li className={`py-1 ${isActive('/find-ambulance') ? 'text-primary' : ''}`}>FIND AMBULANCE</li>
                         <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/find-ambulance') ? 'block' : 'hidden'}`} />
+                    </NavLink>
+                    {/* Reviews link added here */}
+                    <NavLink to='/reviews' className={isActive('/reviews') ? 'text-primary' : ''}>
+                        <li className={`py-1 ${isActive('/reviews') ? 'text-primary' : ''}`}>REVIEWS</li>
+                        <hr className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto ${isActive('/reviews') ? 'block' : 'hidden'}`} />
                     </NavLink>
                     <NavLink to='/about' className={isActive('/about') ? 'text-primary' : ''}>
                         <li className={`py-1 ${isActive('/about') ? 'text-primary' : ''}`}>ABOUT</li>
@@ -72,7 +72,7 @@ const Navigation_bar = () => {
                 </ul>
 
                 <div className='flex items-center gap-4'>
-                    {token ? (  // <--- Use token from AuthContext here
+                    {token ? (
                         <div onClick={handleProfileClick} className='flex items-center gap-2 cursor-pointer group relative'>
                             <img className='w-8 rounded-full' src={assets.profilepic1} alt="" />
                             <img className='w-2.5' src={assets.dropdownicon} alt="" />
@@ -109,12 +109,13 @@ const Navigation_bar = () => {
                                     <NavLink onClick={() => setShowMenu(false)} to='/' className={isActive('/') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/') ? 'text-primary' : ''}`}>HOME</p></NavLink>
                                     <NavLink onClick={() => setShowMenu(false)} to='/doctors' className={isActive('/doctors') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/doctors') ? 'text-primary' : ''}`}>ALL DOCTORS</p></NavLink>
                                     <NavLink onClick={() => setShowMenu(false)} to='/find-ambulance' className={isActive('/find-ambulance') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/find-ambulance') ? 'text-primary' : ''}`}>FIND AMBULANCE</p></NavLink>
+                                    {/* Reviews link added here for mobile menu */}
+                                    <NavLink onClick={() => setShowMenu(false)} to='/reviews' className={isActive('/reviews') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/reviews') ? 'text-primary' : ''}`}>REVIEWS</p></NavLink>
                                     <NavLink onClick={() => setShowMenu(false)} to='/about' className={isActive('/about') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/about') ? 'text-primary' : ''}`}>ABOUT</p></NavLink>
                                     <NavLink onClick={() => setShowMenu(false)} to='/contact' className={isActive('/contact') ? 'text-primary' : ''}><p className={`px-4 py-2 rounded  inline-block ${isActive('/contact') ? 'text-primary' : ''}`}>CONTACT</p></NavLink>
                                 </ul>
                             </div>
                         </div>
-
                     )}
                     {showMenu && <div className="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-50 z-10 md:hidden" onClick={() => setShowMenu(false)}></div>}
                 </div>
