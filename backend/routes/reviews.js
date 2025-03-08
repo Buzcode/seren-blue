@@ -1,43 +1,42 @@
-// reviews.js
 import express from 'express';
 import mongoose from 'mongoose';
-import User from '../model/user.js'; // **IMPORT User model - VERY IMPORTANT!**
-                                       // Adjust path if your user.js is in a different folder
+import User from '../model/user.js';
+import checkToken from '../middlewares/checkToken.js'; // **Import checkToken middleware**
 
 const router = express.Router();
 
-// Review Schema
+// Review Schema - MODIFIED to include likedBy array
 const reviewSchema = new mongoose.Schema({
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     likes: { type: Number, default: 0 },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',  // **MUST BE 'User' (singular, uppercase 'U') to match your model definition**
+        ref: 'User',
         required: true
-    }
+    },
+    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Array to track users who liked
 });
 
 const Review = mongoose.model('Review', reviewSchema);
 
-// GET /api/reviews - Fetch all reviews (with populated user data) - CORRECTED POPULATE SYNTAX
+// GET /api/reviews - Fetch all reviews (with populated user data)
 router.get('/', async (req, res) => {
     console.log("GET /api/reviews route hit! (with DB and User Population)");
     try {
-        // **CORRECTED POPULATE SYNTAX - USING OBJECT WITH 'path' and 'select'**
         const reviews = await Review.find({})
             .populate({
-                path: 'user', // Path to populate: 'user' field in Review model
-                select: 'firstName lastName' // Select these fields from the User model
+                path: 'user',
+                select: 'firstName lastName'
             });
         res.status(200).json(reviews);
     } catch (error) {
         console.error('Error fetching reviews from DB:', error);
-        res.status(500).json({ message: 'Failed to fetch reviews from database', error: error.message, detailedError: error }); // Include detailed error for debugging
+        res.status(500).json({ message: 'Failed to fetch reviews from database', error: error.message, detailedError: error });
     }
 });
 
-// POST /api/reviews - Submit a new review (with populated user data) - CORRECTED POPULATE SYNTAX
+// POST /api/reviews - Submit a new review
 router.post('/', async (req, res) => {
     const { text, userId } = req.body;
 
@@ -51,16 +50,63 @@ router.post('/', async (req, res) => {
     try {
         const newReview = new Review({ text, user: userId });
         const savedReview = await newReview.save();
-        // **CORRECTED POPULATE SYNTAX - USING OBJECT WITH 'path' and 'select'**
         const populatedReview = await Review.findById(savedReview._id)
             .populate({
-                path: 'user', // Path to populate: 'user' field in Review model
-                select: 'firstName lastName' // Select these fields from the User model
+                path: 'user',
+                select: 'firstName lastName'
             });
         res.status(201).json(populatedReview);
     } catch (error) {
         console.error('Error saving review:', error);
-        res.status(500).json({ message: 'Failed to save review', error: error.message, detailedError: error }); // Include detailed error for debugging
+        res.status(500).json({ message: 'Failed to save review', error: error.message, detailedError: error });
+    }
+});
+
+// POST /api/reviews/:reviewId/like - Like/Unlike a review (TOGGLE functionality) - MODIFIED ROUTE
+router.post('/:reviewId/like', checkToken, async (req, res) => { // **Apply checkToken middleware**
+    const reviewId = req.params.reviewId;
+    const userId = req.userId; // **User ID from checkToken middleware**
+
+    if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+        return res.status(400).send('Invalid review ID');
+    }
+    if (!userId) {
+        return res.status(401).send('Unauthorized. User ID required to like/unlike.');
+    }
+
+    try {
+        const review = await Review.findById(reviewId);
+        if (!review) {
+            return res.status(404).send('Review not found');
+        }
+
+        const hasLiked = review.likedBy.includes(userId);
+
+        let updatedReview;
+        if (hasLiked) {
+            // Unlike: Remove user from likedBy and decrement likes
+            updatedReview = await Review.findOneAndUpdate(
+                { _id: reviewId },
+                { $pull: { likedBy: userId }, $inc: { likes: -1 } },
+                { new: true }
+            ).populate({ path: 'user', select: 'firstName lastName' }).exec();
+        } else {
+            // Like: Add user to likedBy and increment likes
+            updatedReview = await Review.findOneAndUpdate(
+                { _id: reviewId },
+                { $addToSet: { likedBy: userId }, $inc: { likes: 1 } },
+                { new: true }
+            ).populate({ path: 'user', select: 'firstName lastName' }).exec();
+        }
+
+        if (!updatedReview) {
+            return res.status(404).send('Review not found after update (unexpected)');
+        }
+
+        res.status(200).json(updatedReview);
+    } catch (error) {
+        console.error("Error liking/unliking review in backend:", error);
+        res.status(500).send('Error liking/unliking review');
     }
 });
 

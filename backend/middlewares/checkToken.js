@@ -9,7 +9,7 @@ const checkToken = (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return res.status(401).json({ error: "Invalid token - No token provided" });
+    return res.status(401).json({ error: "Unauthorized - No token provided" }); // More standard error message
   }
 
   jwt.verify(
@@ -19,7 +19,7 @@ const checkToken = (req, res, next) => {
     (err, decodedUser) => {
       if (err) {
         console.error("JWT Verification Error:", err);
-        res.clearCookie("token", {
+        res.clearCookie("token", { // Keep clearing cookie on error
           httpOnly: true,
           secure: true,
           sameSite: "none",
@@ -27,15 +27,12 @@ const checkToken = (req, res, next) => {
         });
         return res
           .status(401)
-          .json({ error: "Invalid token - Verification failed" });
+          .json({ error: "Unauthorized - Invalid token" }); // More standard error message
       }
 
-      // Attach the decoded user information to the request object as req.doctor (Optional renaming for clarity)
-      req.doctor = decodedUser; // **OPTIONAL: Renamed req.user to req.doctor**
-
-      // Access doctor ID using req.doctor.id (lowercase "id") - CORRECTED LINE and OPTIONAL renaming
-      const doctorId = req.doctor.id; // <-- CHANGED to req.doctor.id and using "id" claim
-      console.log("checkToken middleware - Decoded doctor ID:", doctorId); // <-- ADDED: Log decoded doctorId in checkToken
+      // Attach the decoded user ID to the request object as req.userId
+      req.userId = decodedUser.id; // **MODIFIED: Set req.userId to decoded user ID**
+      console.log("checkToken middleware - Decoded user ID:", req.userId); // Log req.userId
 
       next();
     }
