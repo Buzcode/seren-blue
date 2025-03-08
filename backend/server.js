@@ -1,5 +1,4 @@
-// server.js
-console.log("SERVER.JS FILE IS BEING EXECUTED!"); // Added at the very top for verification
+console.log("SERVER.JS FILE IS BEING EXECUTED!");
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
@@ -9,8 +8,8 @@ import connectCloudinary from "./config/cloudinary.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import adminRoutes from "./routes/admin.js";
-import doctorRoutes from "./routes/doctors.js";
-import doctorDashboardRoutes from "./routes/doctorDashboardRoutes.js";
+import doctorRoutes from "./routes/doctors.js"; // Your existing doctor routes
+import doctorDashboardRoutes from "./routes/doctorDashboardRoutes.js"; // Doctor dashboard routes - CORRECT IMPORT
 import cookieParser from "cookie-parser";
 // ADDED: Import reviews routes
 import reviewsRoutes from "./routes/reviews.js";
@@ -34,8 +33,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/doctors", doctorRoutes);
-app.use("/api/doctor/dashboard", doctorDashboardRoutes);
+app.use("/api/doctors", doctorRoutes); // Your existing doctor routes
+app.use("/api/doctor-dashboard", doctorDashboardRoutes); // Doctor dashboard routes - NEW PATH /api/doctor-dashboard
 
 // ADDED: Use reviews routes middleware with error handling and success log
 try {
