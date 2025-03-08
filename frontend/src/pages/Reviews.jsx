@@ -1,4 +1,3 @@
-// Reviews.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { assets } from '../assets/assets';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
@@ -16,7 +15,8 @@ const Reviews = () => {
             setLoadingReviews(true);
             setError(null);
             try {
-                const response = await fetch('http://localhost:5001/api/reviews');
+                // Removed userId from query parameter
+                const response = await fetch(`http://localhost:5001/api/reviews`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -30,14 +30,12 @@ const Reviews = () => {
             }
         };
         fetchReviews();
-    }, []);
+    }, [user]); // Re-fetch reviews when user context changes
 
     const handleReviewSubmit = async (event) => {
         event.preventDefault();
         if (newReviewText.trim() !== '') {
             const currentUserId = user?._id;
-
-            console.log("Reviews.jsx - handleReviewSubmit - Current User from AuthContext:", user);
 
             if (!currentUserId) {
                 alert("You must be logged in to leave a review.");
@@ -67,41 +65,43 @@ const Reviews = () => {
         }
     };
 
-    const handleLike = async (reviewId) => { // Make handleLike async
-        const currentUserId = user?._id;
+    const handleLike = async (reviewId) => {
+        const currentUserId = user?._id; // Get current user ID
         if (!currentUserId) {
-            alert("You must be logged in to like reviews."); // Or handle this better
+            alert("You must be logged in to like a review.");
             return;
         }
 
         try {
-            const response = await fetch(`/api/reviews/${reviewId}/like`, { // Call backend like route
+            // Removed userId from request body
+            const response = await fetch(`/api/reviews/${reviewId}/like`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send token for auth
                 },
+                // body: JSON.stringify({ userId: currentUserId }), // REMOVED
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const updatedReviewData = await response.json(); // Get updated review data from backend
+            const updatedReviewFromServer = await response.json();
 
-            // Update the reviews state to reflect the like change
-            const updatedReviews = reviews.map(review =>
-                review._id === reviewId ? updatedReviewData.review : review // Replace the review with updated one from server
-            );
+            const updatedReviews = reviews.map(review => {
+                if (review._id === reviewId) {
+                    return updatedReviewFromServer;
+                }
+                return review;
+            });
             setReviews(updatedReviews);
 
-
-        } catch (error) {
-            console.error("Error liking review:", error);
-            setError(error); // Set error state to display error message if needed
+        } catch (e) {
+            setError(e);
+            console.error("Error liking review:", e);
+            alert("Failed to like review. Please try again.");
         }
     };
-
 
     if (loadingReviews) {
         return <p>Loading reviews...</p>;
@@ -148,16 +148,17 @@ const Reviews = () => {
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <button
-                                            onClick={() => handleLike(review._id)} // Call async handleLike
+                                            onClick={() => handleLike(review._id)}
                                             className="text-gray-500 hover:text-red-500 focus:outline-none"
                                         >
-                                            {review.likedByMe ? ( // Use likedByMe from backend
+                                            {/* Calculate likedByMe here */}
+                                            {review.likedBy && user && review.likedBy.includes(user._id) ? (
                                                 <AiFillHeart className="h-5 w-5 text-red-500" />
                                             ) : (
                                                 <AiOutlineHeart className="h-5 w-5" />
                                             )}
                                         </button>
-                                        <span className="text-sm text-gray-700">{review.likes.length}</span>  {/* Display likes count from backend */}
+                                        <span className="text-sm text-gray-700">{review.likes}</span>
                                     </div>
                                 </div>
                             </li>
