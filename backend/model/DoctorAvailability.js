@@ -8,6 +8,7 @@ const doctorAvailabilitySchema = new mongoose.Schema({
   },
   day_of_week: {
     type: String,
+    
     enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     required: true,
   },

@@ -69,5 +69,4 @@ router.get('/test-availability', (req, res) => {
   res.json({ message: 'Test availability endpoint is working!' });
 });
 
-
 export default router;

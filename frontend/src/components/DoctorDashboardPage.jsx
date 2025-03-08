@@ -137,9 +137,8 @@ const DoctorDashboardPage = () => {
           <p>No availability set yet. Please set your availability below.</p>  // **Display this message when availability is empty**
         )}
       </div>
-
       <div className='mt-10'>
-        {/* Edit/Save Button - Keep for now, functionality to be added later */}
+       
         {/* ... (Edit/Save button code) ... */}
       </div>
     </div>
