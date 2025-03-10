@@ -197,8 +197,6 @@ const Appointment = () => {
                         </p>
                     </div>
                 </div>
-
-
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
                     <p>Booking slots</p>
@@ -243,9 +241,6 @@ const Appointment = () => {
                         Book an appointment
                     </button>
                 </div>
-
-
-
 
                 {/*........ Related Doctors........*/}
                 <div className='mt-8 text-gray-700'>
