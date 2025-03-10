@@ -5,12 +5,10 @@ import { assets } from '../assets/assets';
 import { AiFillCheckCircle } from 'react-icons/ai';
 import { IoInformationCircleSharp } from 'react-icons/io5';
 
-
 const Appointment = () => {
     const { docId } = useParams();
-    const { doctors, currencySymbol } = useContext(AppContext);
+    const { currencySymbol } = useContext(AppContext);
     const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
 
     const [docInfo, setDocInfo] = useState(null);
     const [docSlots, setDocSlots] = useState([]);
@@ -18,54 +16,45 @@ const Appointment = () => {
     const [selectedTime, setSelectedTime] = useState('');
     const [appointmentDetails, setAppointmentDetails] = useState(null);
     const [relatedDoctors, setRelatedDoctors] = useState([]);
-    const { bookedAppointments, setBookedAppointments } = useContext(AppContext);
-    const { bookAppointment } = useContext(AppContext); 
-
-
-   
-
-
-
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { bookAppointment } = useContext(AppContext);
+    const [doctorAvailability, setDoctorAvailability] = useState(null); // NEW: State for doctor availability
 
     const fetchDocInfo = async () => {
-        const docInfo = doctors.find((doc) => doc._id === docId);
-        setDocInfo(docInfo);
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`/api/doctor-dashboard/doctors/${docId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setDocInfo(data);
+            setDoctorAvailability(data.availability); // NEW: Set doctor availability from API response
+        } catch (e) {
+            console.error("Error fetching doctor profile:", e);
+            setError(e);
+        } finally {
+            setLoading(false);
+        }
     };
-
 
     const getRelatedDoctors = async () => {
         if (docInfo) {
-            const related = doctors.filter((doc) => doc.speciality === docInfo.speciality && doc._id !== docInfo._id)
-            setRelatedDoctors(related.slice(0, 5));
+            setRelatedDoctors([]); // Placeholder for dynamic related doctors
         }
-    }
-
-
-
-
-
+    };
 
     const getAvailableSlots = async () => {
         setDocSlots([]);
-
-
-        //getting current date
         let today = new Date();
-
-
         for (let i = 0; i < 7; i++) {
-            //getting date with index
             let currentDate = new Date(today);
             currentDate.setDate(today.getDate() + i);
-
-
-            //setting end time of the date with index
             let endTime = new Date();
             endTime.setDate(today.getDate() + i);
             endTime.setHours(21, 0, 0, 0);
-
-
-            //setting hours
             if (today.getDate() === currentDate.getDate()) {
                 currentDate.setHours(
                     currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
@@ -75,49 +64,33 @@ const Appointment = () => {
                 currentDate.setHours(10);
                 currentDate.setMinutes(0);
             }
-
-
             let timeSlots = [];
-
-
             while (currentDate < endTime) {
                 let formattedTime = currentDate.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
                 });
-
-
-                //add slot to array
                 timeSlots.push({
                     datetime: new Date(currentDate),
                     time: formattedTime,
                 });
-
-
-                //increment current time by 30 minutes
                 currentDate.setMinutes(currentDate.getMinutes() + 30);
             }
-
-
             setDocSlots((prev) => [...prev, timeSlots]);
         }
     };
 
-
     useEffect(() => {
         fetchDocInfo();
-    }, [doctors, docId]);
-
+    }, [docId]);
 
     useEffect(() => {
-        getRelatedDoctors()
-    }, [docInfo, doctors]);
-
+        getRelatedDoctors();
+    }, [docInfo]);
 
     useEffect(() => {
         getAvailableSlots();
     }, [docInfo]);
-
 
     useEffect(() => {
         if (selectedDateIndex != null && selectedTime) {
@@ -138,16 +111,54 @@ const Appointment = () => {
         }
     }, [selectedDateIndex, selectedTime, docInfo]);
 
-
-    
     const handleBookAppointment = () => {
         if (appointmentDetails) {
-            bookAppointment(appointmentDetails); // Store appointment in context
+            bookAppointment(appointmentDetails);
             alert("Appointment Booked Successfully!");
         } else {
             alert("Please select both a date and a time before booking");
         }
     };
+
+    const dayNameMap = {
+        0: 'sunday',
+        1: 'monday',
+        2: 'tuesday',
+        3: 'wednesday',
+        4: 'thursday',
+        5: 'friday',
+        6: 'saturday'
+    };
+
+    const handleDayClick = (dayIndex) => {
+        // const selectedDayName = daysOfWeek[dayIndex].toLowerCase(); // OLD - using short day name 'mon', 'tue'
+        const selectedDayName = dayNameMap[dayIndex]; // NEW - using full day name 'monday', 'tuesday'
+        const availabilityMessageDiv = document.getElementById(`${daysOfWeek[dayIndex].toLowerCase()}-availability`); // Keep using short day name for ID
+
+        console.log("Clicked day:", selectedDayName);
+        console.log("doctorAvailability:", doctorAvailability);
+        console.log(`doctorAvailability[${selectedDayName}]:`, doctorAvailability ? doctorAvailability[selectedDayName] : 'doctorAvailability is null');
+
+        if (doctorAvailability && doctorAvailability[selectedDayName] === false) {
+            console.log("Doctor is UNAVAILABLE on", selectedDayName);
+            availabilityMessageDiv.textContent = "Dr. not available on this day!";
+            availabilityMessageDiv.style.color = "red";
+            setSelectedDateIndex(null);
+        } else {
+            console.log("Doctor is AVAILABLE on", selectedDayName);
+            availabilityMessageDiv.textContent = "";
+            setSelectedDateIndex(selectedDateIndex === dayIndex ? null : dayIndex);
+        }
+    };
+
+
+    if (loading) {
+        return <p>Loading doctor profile...</p>;
+    }
+
+    if (error) {
+        return <p>Error loading doctor profile: {error.message}</p>;
+    }
 
     return (
         docInfo && (
@@ -157,29 +168,27 @@ const Appointment = () => {
                     <div>
                         <img
                             className="bg-primary w-full sm:max-w-72 rounded-1g"
-                            src={docInfo.image}
-                            alt=""
+                            src={assets[docInfo.profilePicture]}
+                            alt={docInfo.displayName}
                         />
                     </div>
 
-
                     <div className="flex-1 border border-gray-400 rounded-1g p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0">
-                        {/*..... Doc Info : name, degree, experiance.....*/}
+                        {/*..... Doc Info : name, degree, experience.....*/}
                         <p className="flex items-center gap-2 text-2x1 font-medium  text-gray-900">
-                            {docInfo.name}
+                            {docInfo.displayName}
                             <AiFillCheckCircle className='w-5 h-5 text-primary' />
                         </p>
                         <div className="flex items-center gap-2 text-sm mt-1  text-gray-600">
                             <p>
-                                {docInfo.degree} - {docInfo.speciality}
+                                {docInfo.degree} - {docInfo.specialization}
                             </p>
                             <button className="py-0.5 px-2 border text-xs rounded-full">
                                 {docInfo.experience}
                             </button>
                         </div>
 
-
-                        {/*........Doctord About........*/}
+                        {/*........Doctor About........*/}
                         <div>
                             <p className="flex items-center gap-1 text-sm font-medium  text-gray-900 mt-3">
                                 About <IoInformationCircleSharp className='w-4 h-4' />
@@ -197,6 +206,10 @@ const Appointment = () => {
                         </p>
                     </div>
                 </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1cf9a23b09ff463e647be061242e59cffca5fb0f
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
                     <p>Booking slots</p>
@@ -208,12 +221,12 @@ const Appointment = () => {
                                         ? 'bg-primary text-white'
                                         : 'bg-gray-200 cursor-pointer'
                                         }`}
-                                    onClick={() =>
-                                        setSelectedDateIndex(selectedDateIndex === index ? null : index)
-                                    }
+                                    onClick={() => handleDayClick(index)}
                                 >
                                     {daysOfWeek[index]}
                                 </div>
+                                <div className="availability-message" id={`${daysOfWeek[index].toLowerCase()}-availability`}></div> {/* Availability message div */}
+
                                 {selectedDateIndex === index && (
                                     <div className="mt-2 flex flex-wrap gap-1">
                                         {daySlots.map((slot) => (
@@ -247,7 +260,6 @@ const Appointment = () => {
                     <h3 className='font-bold text-2xl mt-8'>Related Doctors</h3>
                     <p className='font-medium mt-1'>Simply browse through our extensive list of trusted doctors.</p>
 
-
                     <div className='flex gap-5 mt-5 flex-wrap'>
                         {relatedDoctors.map((doc) => (
                             <Link key={doc._id} to={`/appointment/${doc._id}`} className='rounded-1g border p-2 bg-white'>
@@ -266,5 +278,8 @@ const Appointment = () => {
     );
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1cf9a23b09ff463e647be061242e59cffca5fb0f
 export default Appointment;

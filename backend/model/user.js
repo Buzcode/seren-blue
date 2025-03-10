@@ -1,12 +1,12 @@
 import mongoose, { Schema, model } from 'mongoose';
-import validator from 'validator'; 
+import validator from 'validator';
 
 const userSchema = new Schema({
   username: {
     type: Schema.Types.String,
     required: true,
     unique: true,
-    trim: true, 
+    trim: true,
   },
   firstName: {
     type: String,
@@ -18,7 +18,7 @@ const userSchema = new Schema({
     required: true,
     trim: true,
   },
-  displayName: { 
+  displayName: {
     type: String,
     trim: true,
   },
@@ -31,30 +31,46 @@ const userSchema = new Schema({
     enum: ['patient', 'doctor', 'admin'],
     default: 'patient',
   },
-  isPatient: { 
+  isPatient: {
     type: Boolean,
     default: false,
   },
-  isActive: { 
+  isActive: {
     type: Boolean,
     default: true,
   },
-  phone: { 
+  phone: {
     type: String,
     trim: true,
   },
-  address: { 
+  address: {
     line1: { type: String, trim: true },
     line2: { type: String, trim: true },
   },
-  gender: { 
+  gender: {
     type: String,
     enum: ['Male', 'Female', 'Other', ''],
-    required: true,  
+    required: true,
     default: '',
   },
-  birthDate: { 
+  birthDate: {
     type: Date,
+  },
+  specialization: { // ADDED: Doctor's specialization
+    type: String,
+    trim: true,
+  },
+  profilePicture: { // ADDED: Doctor's profile picture URL or path
+    type: String,
+    trim: true,
+  },
+  degree: { // ADDED: Doctor's degree
+    type: String,
+    trim: true,
+  },
+  about: { // ADDED: Doctor's about information
+    type: String,
+    trim: true,
   },
 }, { timestamps: true });
 
