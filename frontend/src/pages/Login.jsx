@@ -22,7 +22,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", { 
+      const response = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const Login = () => {
         body: JSON.stringify(userData),
         credentials: "include",
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Login failed:", errorData);
@@ -40,14 +40,26 @@ const Login = () => {
 
       const responseData = await response.json();
       console.log("Login successful:", responseData);
-      login(responseData);
 
-      const userRole = responseData.user.role; 
+      // **Crucial: Store doctorId in localStorage after successful login**
+      // Assuming your backend responseData.user contains the user information including _id
+      if (responseData.user && responseData.user._id) {
+        localStorage.setItem('doctorId', responseData.user._id);
+      } else {
+        console.error("doctorId not found in responseData:", responseData);
+        setLoginError("Login successful, but doctorId not found. Please contact support.");
+        return; // Stop redirection if doctorId is missing
+      }
+      localStorage.setItem('userRole', responseData.user.role); // Optionally store userRole
+
+      login(responseData); // Update AuthContext
+
+      const userRole = responseData.user.role;
 
       if (userRole === 'doctor') {
-        setRedirectTo('/doctor/dashboard'); 
+        setRedirectTo('/doctor-dashboard'); // Redirect doctor to doctor-dashboard
       } else {
-        setRedirectTo('/MyProfile'); 
+        setRedirectTo('/MyProfile');
       }
 
     } catch (error) {
@@ -62,7 +74,7 @@ const Login = () => {
 
   return (
     <form className="min-h-[80vh] flex items-center" onSubmit={onSubmitHandler}>
-    
+
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-zinc-600 text-sm shadow-lg">
         <p className="text-2xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}

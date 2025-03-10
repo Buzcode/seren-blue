@@ -24,6 +24,8 @@ import AdminPanelPage from './pages/AdminPanelPage';
 import RegisterPage from './pages/RegisterPage';
 // ADDED import for Reviews Page
 import Reviews from './pages/Reviews';
+import DoctorDashboard from './components/DoctorDashboard'; // Adjust path if necessary
+
 
 
 const App = () => {
@@ -63,7 +65,8 @@ const App = () => {
                     <Route path="/check-prices" element={<DiagnosticTestsPage />} />
                     <Route path="/diagnostic-tests/:testCategory" element={<DiagnosticTestsPage />} />
                     <Route path="/center-details/:centerName" element={<CenterDetailsPage />} />
-
+                    <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+                    
                 </Routes>
                 <Footer />
             </div>
