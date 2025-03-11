@@ -2,17 +2,20 @@ console.log("SERVER.JS FILE IS BEING EXECUTED!");
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
+// console.log("PORT from .env:", process.env.PORT); // <-- Optional check if .env is loading correctly
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import adminRoutes from "./routes/admin.js";
-import doctorRoutes from "./routes/doctors.js"; // Your existing doctor routes
-import doctorDashboardRoutes from "./routes/doctorDashboardRoutes.js"; // Doctor dashboard routes - CORRECT IMPORT
+import doctorRoutes from "./routes/doctors.js";
+import doctorDashboardRoutes from "./routes/doctorDashboardRoutes.js";
 import cookieParser from "cookie-parser";
-// ADDED: Import reviews routes
 import reviewsRoutes from "./routes/reviews.js";
+import healthCheckupPaymentRoutes from "./routes/healthCheckupPayment.js";
+import ambulanceRoutes from "./routes/ambulance.js"; // **Import ambulance routes**
+
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -22,10 +25,10 @@ connectCloudinary();
 
 // Middlewares
 app.use(
-  cors({
-    credentials: true,
-    origin: process.env.ALLOWED_ORIGIN,
-  })
+    cors({
+        credentials: true,
+        origin: process.env.ALLOWED_ORIGIN,
+    })
 );
 app.use(express.json());
 app.use(cookieParser());
@@ -33,20 +36,15 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/doctors", doctorRoutes); // Your existing doctor routes
-app.use("/api/doctor-dashboard", doctorDashboardRoutes); // Doctor dashboard routes - NEW PATH /api/doctor-dashboard
-
-// ADDED: Use reviews routes middleware with error handling and success log
-try {
-    app.use("/api/reviews", reviewsRoutes);
-    console.log("Reviews routes mounted successfully!"); // Success log
-} catch (error) {
-    console.error("Error mounting reviews routes:", error); // Error log
-}
+app.use("/api/doctors", doctorRoutes);
+app.use("/api/doctor-dashboard", doctorDashboardRoutes);
+app.use("/api/reviews", reviewsRoutes);
+app.use("/api/health-checkup-payment", healthCheckupPaymentRoutes);
+app.use("/api/ambulance", ambulanceRoutes); // **Use ambulance routes middleware**
 
 
 app.get("/", (req, res) => {
-  res.send("API WORKING");
+    res.send("API WORKING");
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

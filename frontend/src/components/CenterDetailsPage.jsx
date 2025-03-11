@@ -1,3 +1,4 @@
+// centraldetails.jsx file:
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 
@@ -29,8 +30,23 @@ const CenterDetailsPage = () => {
                         foundCenter = place;
                     }
                 }
-                setSelectedTestDetails(foundTestDetails);
+
+                if (foundTestDetails) {
+                    // Quick fix: Remove "BDT " from price if it exists
+                    let numericalPrice = foundTestDetails.price;
+                    if (typeof numericalPrice === 'string' && numericalPrice.startsWith('BDT ')) {
+                        numericalPrice = numericalPrice.replace('BDT ', '');
+                    }
+
+                    setSelectedTestDetails({
+                        ...foundTestDetails,
+                        price: numericalPrice // Use the numerical price
+                    });
+                } else {
+                    setSelectedTestDetails(null); // Ensure to set to null if not found
+                }
                 setCenterDetails(foundCenter);
+
 
                 if (foundCenter && foundCenter.name) {
                     const namePart = foundCenter.name.toLowerCase().split(' | ')[0].split(' ').join('');
@@ -58,9 +74,37 @@ const CenterDetailsPage = () => {
         return <div>Loading or Center not found...</div>;
     }
 
-    const handleBookTest = () => {
-        alert('Booking feature is coming soon!');
-        // Implement booking logic here
+    const handleAddToCart = async () => {
+        console.log("selectedTestDetails before fetch:", selectedTestDetails); // Log before fetch
+        console.log("centerDetails before fetch:", centerDetails);       // Log before fetch
+
+        try {
+            const response = await fetch('/api/health-checkup-payment/initiate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    testDetails: selectedTestDetails,
+                    centerDetails: centerDetails,
+                }),
+                credentials: 'include', // ADDED - Include credentials for cross-origin requests
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.paymentUrl) {
+                // Redirect to the payment URL received from the backend
+                window.location.href = data.paymentUrl;
+            } else {
+                // Payment initiation failed
+                alert('Payment initiation failed.');
+                console.error('Payment initiation error:', data.error || 'Unknown error', data.sslCommerzResponse); // Log SSLCommerz response for debugging
+            }
+        } catch (error) {
+            console.error('Error during payment initiation:', error);
+            alert('Something went wrong while initiating payment.');
+        }
     };
 
 
@@ -97,7 +141,7 @@ const CenterDetailsPage = () => {
                                 <Link to='#' className="text-blue-500 font-semibold hover:underline">More ways to contact</Link>
                             </div>
                             <button
-                                onClick={handleBookTest}
+                                onClick={handleAddToCart}
                                 className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 mt-2 w-[80%]"
                             >
                                 <span className='flex items-center justify-center'>
@@ -171,7 +215,7 @@ const CenterDetailsPage = () => {
                             </svg>
                             {selectedTestDetails.price}
                         </span>
-                        <button onClick={handleBookTest} className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 ">
+                        <button onClick={handleAddToCart} className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 ">
                             Add to Cart
                         </button>
                     </div>

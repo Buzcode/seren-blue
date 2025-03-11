@@ -206,10 +206,6 @@ const Appointment = () => {
                         </p>
                     </div>
                 </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 1cf9a23b09ff463e647be061242e59cffca5fb0f
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
                     <p>Booking slots</p>
@@ -278,8 +274,4 @@ const Appointment = () => {
     );
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1cf9a23b09ff463e647be061242e59cffca5fb0f
 export default Appointment;
