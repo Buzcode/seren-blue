@@ -30,6 +30,7 @@
     "nodemon": "^3.1.9",
     "ssl-commerz-node": "^1.0.4",
     "sslcommerz-lts": "^1.1.0",
+    "sslcommerz-nodejs": "^1.0.8",
     "stripe": "^17.7.0",
     "uuid": "^11.0.5",
     "validator": "^13.12.0"

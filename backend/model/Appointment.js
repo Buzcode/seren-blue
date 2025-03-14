@@ -24,6 +24,14 @@ const appointmentSchema = new mongoose.Schema({
     enum: ['scheduled', 'confirmed', 'completed', 'cancelled'], // Example statuses
     default: 'scheduled', // Default status is 'scheduled'
   },
+  paymentStatus: { // ADDED paymentStatus field**
+    type: String,
+    enum: ['pending', 'paid', 'failed', 'cancelled', 'payment_verification_failed'], // Payment statuses
+    default: 'pending', // Default payment status is 'pending'
+  },
+  transactionId: {  // ADDED transactionId field to store SSLCommerz transaction ID
+    type: String,
+  }
   // ... add other appointment fields as needed (e.g., 'reasonForVisit', 'duration', etc.) ...
 }, { timestamps: true }); // Add createdAt and updatedAt timestamps
 

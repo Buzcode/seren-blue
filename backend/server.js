@@ -15,6 +15,8 @@ import cookieParser from "cookie-parser";
 import reviewsRoutes from "./routes/reviews.js";
 import healthCheckupPaymentRoutes from "./routes/healthCheckupPayment.js";
 import ambulanceRoutes from "./routes/ambulance.js"; // **Import ambulance routes**
+import appointmentRoutes from "./routes/appointmentRoutes.js"; // **Import appointment routes**
+import paymentRoutes from "./routes/paymentRoutes.js"; // **Import payment routes - ADDED LINE**
 
 
 const app = express();
@@ -41,6 +43,8 @@ app.use("/api/doctor-dashboard", doctorDashboardRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/health-checkup-payment", healthCheckupPaymentRoutes);
 app.use("/api/ambulance", ambulanceRoutes); // **Use ambulance routes middleware**
+app.use("/api", appointmentRoutes); // **Use appointment routes middleware and mount under /api prefix**
+app.use("/api/payment", paymentRoutes); // **Use payment routes middleware and mount under /api/payment prefix - ADDED LINE**
 
 
 app.get("/", (req, res) => {
