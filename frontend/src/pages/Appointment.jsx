@@ -302,7 +302,7 @@ const Appointment = () => {
                 </div>
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
-                    <p>Booking slots</p>
+                    <p>Book your appointment this week</p>
                     <div className="flex gap-2 mt-2">
                         {docSlots.map((daySlots, index) => (
                             <div key={index}>

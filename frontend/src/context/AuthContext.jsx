@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem('token') || null);
+    const [token, setToken] = useState(null); // Initialize token to null, no localStorage check on init
     const [user, setUser] = useState(null); // State to store user information
     const navigate = useNavigate();
 
     useEffect(() => {
         console.log("AuthContext useEffect - Token changed:", token);
         if (token) {
-            localStorage.setItem('token', token);
+            localStorage.setItem('token', token); // Persist token to localStorage
             console.log("AuthContext useEffect - Token set in localStorage:", token);
             const fetchUserProfile = async () => {
                 console.log("AuthContext useEffect - Fetching user profile..."); // Added log before fetch
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
             };
             fetchUserProfile();
         } else {
-            localStorage.removeItem('token');
+            localStorage.removeItem('token'); // Remove token from localStorage on logout/null token
             console.log("AuthContext useEffect - Token removed from localStorage.");
             setUser(null); // Clear user on logout/token removal
         }
