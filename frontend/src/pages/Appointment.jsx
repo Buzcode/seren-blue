@@ -188,7 +188,7 @@ const Appointment = () => {
             amount: docInfo.fees, // Assuming docInfo.fees is the appointment fee
         };
 
-        const token = localStorage.getItem('authToken'); // **IMPORTANT: Get your JWT token from where you store it after login (e.g., localStorage, cookies)**
+        const token = localStorage.getItem('token'); // **MODIFIED LINE: Changed 'authToken' to 'token'**
 
         console.log("Auth Token:", token); // ADDED THIS LINE FOR DEBUGGING
 

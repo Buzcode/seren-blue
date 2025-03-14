@@ -1,4 +1,4 @@
-// backend/routes/paymentRoutes.js (ES Modules)
+// backend/routes/paymentRoutes.js
 import express from 'express';
 const router = express.Router();
 import SSLCommerzPayment from 'sslcommerz-nodejs';
@@ -17,7 +17,11 @@ router.post('/initiate', authorizeRole(), async (req, res) => {
         return res.status(400).json({ message: 'Missing appointment details (doctorId, appointmentTime, amount).' });
     }
 
-    const patientId = req.user?._id;
+    // **MODIFIED LINE: Accessing patientId using req.user?.id (no underscore)**
+    const patientId = req.user?.id;
+    console.log("Payment Initiate - req.user object:", req.user);
+    console.log("Received appointmentTime from frontend:", appointmentTime); // Log received appointmentTime
+
     if (!patientId) {
         return res.status(401).json({ message: 'Patient ID not found in authenticated user context.' });
     }
@@ -42,7 +46,7 @@ router.post('/initiate', authorizeRole(), async (req, res) => {
         success_url: `${process.env.SSLCOMMERZ_DOMAIN}${process.env.SSLCOMMERZ_SUCCESS_URL}`,
         fail_url: `${process.env.SSLCOMMERZ_DOMAIN}${process.env.SSLCOMMERZ_FAIL_URL}`,
         cancel_url: `${process.env.SSLCOMMERZ_DOMAIN}${process.env.SSLCOMMERZ_CANCEL_URL}`,
-        ipn_url: 'http://localhost:5000/ipn', // **IMPORTANT: Update port if your backend port is not 5000**
+        ipn_url: 'http://localhost:5001/ipn',
         product_name: 'Doctor Appointment Booking',
         product_category: 'Healthcare',
         product_profile: 'general',
@@ -52,19 +56,56 @@ router.post('/initiate', authorizeRole(), async (req, res) => {
         cus_city: 'N/A',
         cus_country: 'Bangladesh',
         cus_phone: 'N/A',
-        //ship_name: 'N/A',
-        //ship_add1: 'N/A',
-        //ship_city: 'N/A',
-        //ship_country: 'N/A',
-        //ship_postcode: 'N/A',
+        shipping_method: 'NO',
         value_a: doctorId,
         value_b: appointmentTime,
         value_c: patientId,
         value_d: 'patient-booking'
     };
 
-    const sslcommerze = new SSLCommerzPayment(process.env.SSLCOMMERZ_STORE_ID, process.env.SSLCOMMERZ_STORE_PASSWORD);
-    sslcommerze.init(data).then(async apiResponse => { // ADDED async HERE
+    // ------------------- DATE PARSING LOGIC (Scenario A: Time String Only) -----------------------
+    let parsedAppointmentTime; // Variable to hold parsed Date object
+    try {
+        const today = new Date(); // Assume today's date
+        const timeString = appointmentTime;
+
+        function parseTimeStringToDate(timeStr) {
+            const [timePart, period] = timeStr.split(' ');
+            let [hours, minutes] = timePart.split(':').map(Number);
+
+            if (period.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+            if (period.toUpperCase() === 'AM' && hours === 12) hours = 0;
+
+            today.setHours(hours);
+            today.setMinutes(minutes);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
+            return today; // Return the modified 'today' Date object
+        }
+
+        parsedAppointmentTime = parseTimeStringToDate(timeString);
+        console.log("Parsed appointmentTime:", parsedAppointmentTime);
+
+        if (isNaN(parsedAppointmentTime.getTime())) {
+            console.error("Invalid Date object created.");
+            return res.status(400).json({ message: 'Invalid appointment time format.' });
+        }
+
+    } catch (dateParsingError) {
+        console.error("Error parsing appointment time:", dateParsingError);
+        return res.status(400).json({ message: 'Error parsing appointment time.', error: dateParsingError });
+    }
+    // ------------------- END DATE PARSING LOGIC (Scenario A) -------------------
+
+
+    // **MODIFIED SSLCommerz Initialization:**
+    const sslcommerze = new SSLCommerzPayment({
+        store_id: process.env.SSL_STORE_ID,
+        store_passwd: process.env.SSL_STORE_PASSWORD,
+        isSandboxMode: process.env.SSL_IS_LIVE === 'false'
+    });
+
+    sslcommerze.init_transaction(data).then(async apiResponse => { // **MODIFIED: Use init_transaction**
         let gatewayPageURL = apiResponse.GatewayPageURL;
 
         if (gatewayPageURL) {
@@ -73,7 +114,7 @@ router.post('/initiate', authorizeRole(), async (req, res) => {
                 const appointment = await Appointment.create({ // **TODO: 8a. CREATE APPOINTMENT DOCUMENT HERE or UPDATE existing one if appointment is created earlier.**
                     doctorId: doctorId,
                     patientId: patientId,
-                    appointmentTime: appointmentTime, // Make sure appointmentTime is a Date object or correctly parsed
+                    appointmentTime: parsedAppointmentTime, // **USE PARSED Date object here**
                     transactionId: transactionId, // Store transactionId in appointment document
                     paymentStatus: 'pending'      // Initial payment status is pending
                     // ... other appointment details you might have ...

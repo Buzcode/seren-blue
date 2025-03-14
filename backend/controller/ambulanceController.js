@@ -1,5 +1,5 @@
 import AmbulanceBooking from "../model/AmbulanceBooking.js";
-import SSLCommerzPayment from "sslcommerz-lts";
+import SSLCommerzPayment from "sslcommerz-lts"; // Correct import for sslcommerz-lts
 
 const store_id = process.env.SSL_STORE_ID;
 const store_passwd = process.env.SSL_STORE_PASSWORD;
@@ -78,9 +78,9 @@ export const initiatePayment = async (req, res) => {
       return res.status(404).json({ message: "Booking not found." });
     }
 
-    const ambulanceFare = 500;
+    const ambulanceFare = 500; // Define ambulance fare
 
-    // **SSL Payment
+    // **SSL Payment Initiation using sslcommerz-lts
     const data = {
       total_amount: ambulanceFare,
       currency: "BDT",
@@ -97,11 +97,6 @@ export const initiatePayment = async (req, res) => {
       cus_country: "Bangladesh",
       cus_phone: booking.patientPhone,
       shipping_method: "NO",
-      //   ship_name: "N/A",
-      //   ship_add1: "N/A",
-      //   ship_city: "N/A",
-      //   ship_country: "N/A",
-      //   ship_postcode: "N/A",
       product_name: "Ambulance Service Booking",
       product_category: "Healthcare",
       product_profile: "physical-goods",
@@ -109,7 +104,7 @@ export const initiatePayment = async (req, res) => {
 
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
     sslcz
-      .init(data)
+      .init(data) // Using .init() for sslcommerz-lts
       .then((apiResponse) => {
         let gateway_url = apiResponse.GatewayPageURL;
         res
@@ -141,9 +136,10 @@ export const paymentSuccessCallback = async (req, res) => {
         .json({ message: "Invalid payment callback parameters." });
     }
 
-    const sslcz = new sslcommerz(store_id, store_passwd, is_live);
+    const ambulanceFare = 500; // Define ambulance fare - important for validation!
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live); // Corrected class name
 
-    sslcz.validate(val_id, tran_id, "BDT", 100).then(async (validation) => {
+    sslcz.validate(val_id, tran_id, "BDT", ambulanceFare).then(async (validation) => { // Using .validate() and ambulanceFare
       if (validation && validation.status === "VALID") {
         await AmbulanceBooking.findByIdAndUpdate(bookingId, {
           paymentStatus: "paid",
