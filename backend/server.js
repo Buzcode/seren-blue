@@ -13,6 +13,8 @@ import doctorDashboardRoutes from "./routes/doctorDashboardRoutes.js"; // Doctor
 import cookieParser from "cookie-parser";
 // ADDED: Import reviews routes
 import reviewsRoutes from "./routes/reviews.js";
+//import paymentRoutes from "./routes/payment.js"; // Import payment routes
+import paymentRoutes from "./routes/payment.js"; // Import payment routes
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -35,6 +37,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/doctors", doctorRoutes); // Your existing doctor routes
 app.use("/api/doctor-dashboard", doctorDashboardRoutes); // Doctor dashboard routes - NEW PATH /api/doctor-dashboard
+app.use("/api/payment", paymentRoutes);
 
 // ADDED: Use reviews routes middleware with error handling and success log
 try {
