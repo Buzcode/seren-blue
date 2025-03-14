@@ -17,9 +17,15 @@ const Appointment = () => {
     const [appointmentDetails, setAppointmentDetails] = useState(null);
     const [relatedDoctors, setRelatedDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null); // State for doctor profile loading errors
+    const [paymentError, setPaymentError] = useState(null); // NEW state for payment errors
     const { bookAppointment } = useContext(AppContext);
-    const [doctorAvailability, setDoctorAvailability] = useState(null); // NEW: State for doctor availability
+    const [doctorAvailability, setDoctorAvailability] = useState(null);
+    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+    const [checkboxError, setCheckboxError] = useState(false);
+    const [timeSlotError, setTimeSlotError] = useState(false);
+    const [isTimeSlotSelected, setIsTimeSlotSelected] = useState(false);
+
 
     const fetchDocInfo = async () => {
         setLoading(true);
@@ -31,7 +37,7 @@ const Appointment = () => {
             }
             const data = await response.json();
             setDocInfo(data);
-            setDoctorAvailability(data.availability); // NEW: Set doctor availability from API response
+            setDoctorAvailability(data.availability);
         } catch (e) {
             console.error("Error fetching doctor profile:", e);
             setError(e);
@@ -106,8 +112,11 @@ const Appointment = () => {
                 doctor: docInfo,
             };
             setAppointmentDetails(appointment);
+            setIsTimeSlotSelected(true); // Time slot is selected
+            setTimeSlotError(false); // Clear time slot error if any
         } else {
             setAppointmentDetails(null);
+            setIsTimeSlotSelected(false); // No time slot selected
         }
     }, [selectedDateIndex, selectedTime, docInfo]);
 
@@ -116,7 +125,7 @@ const Appointment = () => {
             bookAppointment(appointmentDetails);
             alert("Appointment Booked Successfully!");
         } else {
-            alert("Please select both a date and a time before booking");
+            alert("Please select both a date and a time before booking"); // This alert might not be needed as we have checkbox error now
         }
     };
 
@@ -131,9 +140,8 @@ const Appointment = () => {
     };
 
     const handleDayClick = (dayIndex) => {
-        // const selectedDayName = daysOfWeek[dayIndex].toLowerCase(); // OLD - using short day name 'mon', 'tue'
-        const selectedDayName = dayNameMap[dayIndex]; // NEW - using full day name 'monday', 'tuesday'
-        const availabilityMessageDiv = document.getElementById(`${daysOfWeek[dayIndex].toLowerCase()}-availability`); // Keep using short day name for ID
+        const selectedDayName = dayNameMap[dayIndex];
+        const availabilityMessageDiv = document.getElementById(`${daysOfWeek[dayIndex].toLowerCase()}-availability`);
 
         console.log("Clicked day:", selectedDayName);
         console.log("doctorAvailability:", doctorAvailability);
@@ -144,11 +152,91 @@ const Appointment = () => {
             availabilityMessageDiv.textContent = "Dr. not available on this day!";
             availabilityMessageDiv.style.color = "red";
             setSelectedDateIndex(null);
+            setSelectedTime(''); // Clear selected time when day is unselected or unavailable
+            setIsTimeSlotSelected(false); // No time slot selected
+            setTimeSlotError(false); // Clear time slot error
         } else {
             console.log("Doctor is AVAILABLE on", selectedDayName);
             availabilityMessageDiv.textContent = "";
             setSelectedDateIndex(selectedDateIndex === dayIndex ? null : dayIndex);
+            if (selectedDateIndex === dayIndex) {
+                setSelectedTime(''); // Clear selected time if the same day is clicked again to deselect
+                setIsTimeSlotSelected(false); // No time slot selected
+                setTimeSlotError(false); // Clear time slot error
+            }
         }
+    };
+
+    const handlePayNow = async () => {
+        if (!isTimeSlotSelected) {
+            setTimeSlotError(true);
+            setCheckboxError(false);
+            return;
+        }
+        setTimeSlotError(false);
+
+        if (!isCheckboxChecked) {
+            setCheckboxError(true);
+            return;
+        }
+        setCheckboxError(false);
+
+
+        const paymentData = {
+            doctorId: docId,
+            appointmentTime: selectedTime,
+            amount: docInfo.fees, // Assuming docInfo.fees is the appointment fee
+        };
+
+        const token = localStorage.getItem('token'); // **MODIFIED LINE: Changed 'authToken' to 'token'**
+
+        console.log("Auth Token:", token); // ADDED THIS LINE FOR DEBUGGING
+
+        try {
+            const response = await fetch('/api/payment/initiate', { // **Your backend payment initiation endpoint**
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // **Include JWT token in Authorization header**
+                },
+                body: JSON.stringify(paymentData),
+                credentials: "include", // Keep this line if you need to send cookies
+            });
+
+            if (!response.ok) {
+                // Handle HTTP errors (e.g., 401 Unauthorized, 500 Server Error)
+                const message = `HTTP error! status: ${response.status}`;
+                setPaymentError(new Error(message)); // Use setPaymentError for payment errors
+                setError(null); // Clear doctor profile error state (optional)
+                console.error('Payment initiation failed:', message);
+                alert('Payment initiation failed. Please try again.'); // User-friendly alert
+                return; // Stop further processing
+            }
+
+            const data = await response.json();
+
+            if (data.url) {
+                // Redirect user to the payment gateway URL received from backend
+                window.location.href = data.url;
+            } else {
+                // Handle case where backend didn't return a payment URL (unexpected)
+                console.error('Payment URL not received from backend:', data);
+                alert('Payment initiation failed. No payment URL received.');
+            }
+
+        } catch (error) {
+            // Handle network errors or exceptions during API call
+            setPaymentError(error); // Use setPaymentError for payment errors
+            setError(null); // Clear doctor profile error state (optional)
+            console.error('Error initiating payment:', error);
+            alert('Payment initiation failed due to a network error. Please try again.');
+        }
+    };
+
+
+    const handleCheckboxChange = (event) => {
+        setIsCheckboxChecked(event.target.checked);
+        setCheckboxError(false);
     };
 
 
@@ -156,6 +244,7 @@ const Appointment = () => {
         return <p>Loading doctor profile...</p>;
     }
 
+    // Conditionally render doctor profile error message
     if (error) {
         return <p>Error loading doctor profile: {error.message}</p>;
     }
@@ -163,6 +252,11 @@ const Appointment = () => {
     return (
         docInfo && (
             <div>
+                {/* Optional: Display payment error message for debugging */}
+                {paymentError && (
+                    <p className="text-red-500">Payment Error: {paymentError.message}</p>
+                )}
+
                 {/*......Doctor Details.......*/}
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div>
@@ -170,7 +264,7 @@ const Appointment = () => {
                             className="bg-primary w-full sm:max-w-72 rounded-1g"
                             src={assets[docInfo.profilePicture]}
                             alt={docInfo.displayName}
-                        />
+                            />
                     </div>
 
                     <div className="flex-1 border border-gray-400 rounded-1g p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0">
@@ -206,10 +300,9 @@ const Appointment = () => {
                         </p>
                     </div>
                 </div>
-
                 {/*......Booking Slots........*/}
                 <div className="sm:ml-72 sm:pl-4 font-medium text-gray-700">
-                    <p>Booking slots</p>
+                    <p>Book your appointment this week</p>
                     <div className="flex gap-2 mt-2">
                         {docSlots.map((daySlots, index) => (
                             <div key={index}>
@@ -222,7 +315,7 @@ const Appointment = () => {
                                 >
                                     {daysOfWeek[index]}
                                 </div>
-                                <div className="availability-message" id={`${daysOfWeek[index].toLowerCase()}-availability`}></div> {/* Availability message div */}
+                                <div className="availability-message" id={`${daysOfWeek[index].toLowerCase()}-availability`}></div>
 
                                 {selectedDateIndex === index && (
                                     <div className="mt-2 flex flex-wrap gap-1">
@@ -233,7 +326,7 @@ const Appointment = () => {
                                                     ? 'bg-primary text-white'
                                                     : ''
                                                     }`}
-                                                onClick={() => setSelectedTime(slot.time)}
+                                                onClick={() => {setSelectedTime(slot.time); setTimeSlotError(false);}}
                                             >
                                                 {slot.time}
                                             </button>
@@ -243,12 +336,29 @@ const Appointment = () => {
                             </div>
                         ))}
                     </div>
-                    {/*......Book Appointment Button.......*/}
+                    {timeSlotError && <p className="text-red-500 text-sm mt-1">Please select appointment time.</p>}
+
+                    {/*......Book Appointment Checkbox and Pay Now Button.......*/}
+                    <div className="mt-4 flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            id="bookAppointmentCheckbox"
+                            checked={isCheckboxChecked}
+                            onChange={handleCheckboxChange}
+                            className="w-5 h-5"
+                            disabled={!isTimeSlotSelected}
+                        />
+                        <label htmlFor="bookAppointmentCheckbox" className="text-lg">
+                            Book Appointment
+                        </label>
+                    </div>
+                    {checkboxError && <p className="text-red-500 text-sm mt-1">Please check the 'Book Appointment' checkbox first.</p>}
                     <button
-                        onClick={handleBookAppointment}
-                        className="bg-primary text-white py-2 px-4 mt-4 rounded-md"
+                        onClick={handlePayNow}
+                        className="bg-green-500 text-white py-2 px-4 mt-2 rounded-md text-lg"
+                        disabled={!isTimeSlotSelected}
                     >
-                        Book an appointment
+                        Pay Now
                     </button>
                 </div>
 

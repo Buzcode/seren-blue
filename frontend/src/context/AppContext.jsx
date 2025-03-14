@@ -14,11 +14,16 @@ const AppContextProvider = (props) => {
         setAppointments((prev) => [...prev, appointment]);
     };
 
+    // **User State Management:**
+    const [user, setUser] = useState(null); // Initialize user state to null (no user logged in initially)
+
     const value = {
         doctors,
         currencySymbol,
-        appointments, // Store booked appointments
-        bookAppointment, // Function to add an appointment
+        appointments,
+        bookAppointment,
+        user,         // **Include user state in the value**
+        setUser,      // **Include setUser function in the value**
     };
 
     return (

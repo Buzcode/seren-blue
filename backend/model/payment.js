@@ -1,19 +1,21 @@
-const mongoose = require('mongoose');
+// backend/models/Payment.js (ES Modules syntax)
+import mongoose from 'mongoose';
+const { Schema } = mongoose; // Destructure Schema for cleaner code
 
-const paymentSchema = new mongoose.Schema({
+const paymentSchema = new Schema({ // Use Schema instead of mongoose.Schema
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the User model
+        type: Schema.Types.ObjectId, // Use Schema.Types.ObjectId
+        ref: 'User',
         required: true
     },
     doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Doctor', // Reference to the Doctor model
+        type: Schema.Types.ObjectId,
+        ref: 'Doctor',
         required: true
     },
     appointmentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment', // Reference to the Appointment model
+        type: Schema.Types.ObjectId,
+        ref: 'Appointment',
         required: true
     },
     amount: {
@@ -78,4 +80,4 @@ const paymentSchema = new mongoose.Schema({
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
-module.exports = Payment;
+export default Payment; // Change to export default for ES Modules

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { AppContext } from "../context/AppContext"; // **Import AppContext**
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -9,8 +10,9 @@ const Login = () => {
   const [name, setName] = useState("");
   const [loginError, setLoginError] = useState(null);
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // **Correct hook: useNavigate()**
   const [redirectTo, setRedirectTo] = useState(null);
+  const { setUser } = useContext(AppContext); // **Get setUser from AppContext using useContext**
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -53,6 +55,7 @@ const Login = () => {
       localStorage.setItem('userRole', responseData.user.role); // Optionally store userRole
 
       login(responseData); // Update AuthContext
+      setUser(responseData.user); // **Call setUser to update user state in AppContext with the received user data**
 
       const userRole = responseData.user.role;
 

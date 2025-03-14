@@ -1,10 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { assets } from '../assets/assets';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Correct import for useNavigate
 
 const FindAmbulancePage = () => {
+    // State variables to manage form input values
+    const [ambulanceType, setAmbulanceType] = useState('');
+    const [fromLocation, setFromLocation] = useState('');
+    const [destinationLocation, setDestinationLocation] = useState('');
+    const [doctorNeeded, setDoctorNeeded] = useState(false);
+    const [bookingDate, setBookingDate] = useState('');
+    const [roundTrip, setRoundTrip] = useState(false);
+    const [patientName, setPatientName] = useState('');
+    const [patientPhone, setPatientPhone] = useState('');
+    const navigate = useNavigate(); // **Corrected variable name: useNavigate (not useNavigate2)**
+
+    // Function to handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            ambulanceType,
+            fromLocation,
+            destination: destinationLocation,
+            needDoctor: doctorNeeded,
+            bookingDate, // You might need to format the date appropriately for your backend
+            needRoundTrip: roundTrip,
+            patientName,
+            patientPhone,
+        };
+
+        try {
+            const response = await axios.post('/api/ambulance/request', formData);
+            console.log("Ambulance request submitted:", response.data);
+
+            if (response.data.bookingId) {
+                navigate(`/ambulance/confirm/${response.data.bookingId}`);
+            } else {
+                alert("Ambulance request submitted, but booking ID not received. Please contact support.");
+            }
+
+        } catch (error) {
+            console.error("Error submitting ambulance request:", error);
+            alert("Failed to submit ambulance request. Please check your details and try again.");
+        }
+    };
+
     return (
         <div className="font-sans bg-sky-50">
-           
+
             <div className="relative h-[500px] bg-cover bg-center rounded-lg overflow-hidden" style={{ backgroundImage: `url(${assets.ambulance_highway})` }}>
                 <div className="absolute inset-0 bg-black opacity-70 rounded-lg"></div>
                 <div className="absolute inset-0 flex flex-col justify-center items-start text-white p-10 md:p-20">
@@ -66,7 +110,7 @@ const FindAmbulancePage = () => {
                             <img src={assets.icu_ambulance3} alt="ICU Ambulance 3" className="rounded-lg" />
                         </div>
                         <p className="text-gray-700 mb-6">
-                            The assignment of the ACLS emergency vehicle is to carry patients who are extremely harmed or enduring a heart assault, cardiac capture, asthma assault, stroke, respiratory disappointment, serious dying, obviousness, seizures, burn harm, harming, head damage, polytrauma, pregnancy, diabetic crisis, etc. Our ACLS rescue vehicle is prepared with a biphasic defibrillator, ventilator gadget, volumetric implantation, syringe pumps, and oxygen barrel. The completely programmed vehicle suspension framework guarantees an understanding of consolation and security for the continuous. We are prepared to serve the patients with top-notch arrangements. We offer the patients beneath perception till the time they are conceded to the adjacent clinics. Our restorative specialists (e.g. specialists, paramedics, ACLS pros) analyze the patients for basic conditions.
+                            The assignment of the ACLS emergency vehicle is to carry patients who are extremely harmed or enduring a heart assault, cardiac capture, asthma assault, stroke, respiratory disappointment, serious dying, obviousness, seizures, burn harm, harming, head damage, polytrauma, pregnancy, diabetic crisis, etc. Our ACLS rescue vehicle is prepared with a biphasic defibrillator, ventilator gadget, volumetric implantation, syringe pumps, and oxygen barrel. The completely programmed vehicle suspension framework guarantees an understanding of consolation and security for the continuous. We are prepared to serve the patients beneath perception till the time they are conceded to the adjacent clinics. Our restorative specialists (e.g. specialists, paramedics, ACLS pros) analyze the patients for basic conditions.
                         </p>
                         <ul className="mb-8 space-y-2">
                             <li className="flex items-center">
@@ -113,14 +157,16 @@ const FindAmbulancePage = () => {
                 </div>
 
                 {/* Request an Ambulance Form Section */}
-                <div className="bg-sky-100 p-4 rounded-lg shadow-md h-fit"> {/* Added h-fit here and kept p-4 */}
+                <div className="bg-sky-100 p-4 rounded-lg shadow-md h-fit">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800">Request an Ambulance</h3>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="ambulanceType" className="block text-gray-700 text-sm font-bold mb-2">Ambulance Type</label>
                             <select
                                 id="ambulanceType"
                                 className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={ambulanceType}
+                                onChange={(e) => setAmbulanceType(e.target.value)}
                             >
                                 <option value="">Select Ambulance Type</option>
                                 <option value="ac">AC Ambulance</option>
@@ -130,32 +176,76 @@ const FindAmbulancePage = () => {
                         </div>
                         <div>
                             <label htmlFor="fromLocation" className="block text-gray-700 text-sm font-bold mb-2">From</label>
-                            <input type="text" id="fromLocation" placeholder="Example- Dhaka" className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                            <input
+                                type="text"
+                                id="fromLocation"
+                                placeholder="Example- Dhaka"
+                                className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={fromLocation}
+                                onChange={(e) => setFromLocation(e.target.value)}
+                            />
                         </div>
                         <div>
                             <label htmlFor="destinationLocation" className="block text-gray-700 text-sm font-bold mb-2">Destination</label>
-                            <input type="text" id="destinationLocation" placeholder="Example- Khulna" className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                            <input
+                                type="text"
+                                id="destinationLocation"
+                                placeholder="Example- Khulna"
+                                className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={destinationLocation}
+                                onChange={(e) => setDestinationLocation(e.target.value)}
+                            />
                         </div>
                         <div className="flex items-center">
-                            <input type="checkbox" id="doctorNeeded" className="mr-2" />
+                            <input
+                                type="checkbox"
+                                id="doctorNeeded"
+                                className="mr-2"
+                                checked={doctorNeeded}
+                                onChange={(e) => setDoctorNeeded(e.target.checked)}
+                            />
                             <label htmlFor="doctorNeeded" className="text-gray-700">I need a doctor</label>
                         </div>
                         <div>
-                            <input type="date" placeholder="mm/dd/yyyy" className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                            <input
+                                type="date"
+                                placeholder="mm/dd/yyyy"
+                                className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={bookingDate}
+                                onChange={(e) => setBookingDate(e.target.value)}
+                            />
                         </div>
                         <div className="flex items-center">
-                            <input type="checkbox" id="roundTrip" className="mr-2" />
+                            <input
+                                type="checkbox"
+                                id="roundTrip"
+                                className="mr-2"
+                                checked={roundTrip}
+                                onChange={(e) => setRoundTrip(e.target.checked)}
+                            />
                             <label htmlFor="roundTrip" className="text-gray-700">I need a round trip</label>
                         </div>
                         <div>
-                            <input type="text" placeholder="Your Name" className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                            <input
+                                type="text"
+                                placeholder="Your Name"
+                                className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={patientName}
+                                onChange={(e) => setPatientName(e.target.value)}
+                            />
                         </div>
                         <div>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <span className="text-gray-700">+880</span>
                                 </div>
-                                <input type="tel" placeholder="" className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-12" />
+                                <input
+                                    type="tel"
+                                    placeholder=""
+                                    className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-12"
+                                    value={patientPhone}
+                                    onChange={(e) => setPatientPhone(e.target.value)}
+                                />
                             </div>
                         </div>
                         <button type="submit" className="bg-sky-200 hover:bg-sky-300 text-black font-normal py-3 px-4 rounded focus:outline-none focus:shadow-outline w-full">

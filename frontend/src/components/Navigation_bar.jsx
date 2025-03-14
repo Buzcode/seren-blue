@@ -15,7 +15,8 @@ const Navigation_bar = () => {
     const handleLogout = useCallback(() => {
         logout();
         setShowProfileMenu(false);
-    }, [logout, setShowProfileMenu]);
+        navigate('/'); // Navigate to homepage after logout
+    }, [logout, setShowProfileMenu, navigate]);
 
     const handleProfileClick = useCallback(() => {
         setShowProfileMenu((prev) => !prev);
@@ -94,7 +95,7 @@ const Navigation_bar = () => {
                         </div>
                     ) : (
                         <button onClick={() => navigate('/login')} className='bg-primary text-black px-8 py-3 rounded-full font-semibold hidden md:block'>
-                            Create account
+                            Login {/* Changed text to "Login" */}
                         </button>
                     )}
                     <HiMenu onClick={() => { setShowMenu((prev) => !prev); setShowProfileMenu(false) }} className='h-6 w-6 text-zinc-700 md:hidden' />
