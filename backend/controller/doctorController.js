@@ -5,8 +5,6 @@ export const getMyAppointmentsController = async (req, res) => {
   try {
     const doctorId = req.user.userId; // Extract doctor's ID from req.user (set by checkToken middleware)
 
-
-  
     console.log("Fetching appointments for doctor ID:", doctorId); // <-- ADDED: Logging doctorId
 
     // Fetch appointments from database for this doctorId
