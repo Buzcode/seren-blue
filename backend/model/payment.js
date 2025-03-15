@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 // backend/models/Payment.js (ES Modules syntax)
 import mongoose from 'mongoose';
 const { Schema } = mongoose; // Destructure Schema for cleaner code
@@ -17,67 +18,72 @@ const paymentSchema = new Schema({ // Use Schema instead of mongoose.Schema
         type: Schema.Types.ObjectId,
         ref: 'Appointment',
         required: true
+=======
+// backend/models/Payment.js
+import mongoose from 'mongoose';
+
+const paymentSchema = new mongoose.Schema({
+    transactionId: {
+        type: String,
+        required: true,
+        unique: true
+>>>>>>> Stashed changes
     },
     amount: {
         type: Number,
         required: true
     },
     currency: {
-        type: String,
-        default: 'USD' // Or 'BDT' as appropriate
-    },
-    paymentMethod: {
+    customerName: {
         type: String,
         required: true
     },
-    paymentGateway: {
+    customerEmail: {
         type: String,
         required: true
     },
-    transactionId: {
-        type: String
+    customerPhone: {
+        type: String,
+        required: true
+    },
+    doctorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Doctor',  // Assuming you have a Doctor model
+        required: true
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',  // Assuming you have a User model
+        required: true
     },
     paymentStatus: {
         type: String,
-        enum: ['Success', 'Pending', 'Failed', 'Refunded'],
-        default: 'Pending'
+        enum: ['pending', 'completed', 'failed', 'cancelled'],
+        default: 'pending'
     },
-    paymentDate: {
-        type: Date
+      tran_id: {
+        type: String,
+        required: true
     },
-    paymentDetails: {  // Store card or banking details(HASHED)
-        cardType: {
-            type: String,
-        },
-        cardNumber: {
-            type: String, // Store only last 4 digits or tokenized data
-        },
-        cardHolderName: {
-            type: String
-        },
-        expiryDate: {
-            type: String,
-        },
+    val_id: {
+        type: String,
     },
-    invoiceNumber: {
-        type: String
+    card_type: {
+        type: String,
     },
-    description: {
-        type: String
+    currency_type: {
+        type: String,
     },
-    otp: {
-      type: String  // Hashed OTP
+    store_amount: {
+        type: String,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+
+}, { timestamps: true });
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
+<<<<<<< Updated upstream
 export default Payment; // Change to export default for ES Modules
+=======
+export default Payment;
+>>>>>>> Stashed changes

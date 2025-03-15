@@ -7,14 +7,23 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null); // Initialize token to null, no localStorage check on init
     const [user, setUser] = useState(null); // State to store user information
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         console.log("AuthContext useEffect - Token changed:", token);
+<<<<<<< Updated upstream
         if (token) {
             localStorage.setItem('token', token); // Persist token to localStorage
             console.log("AuthContext useEffect - Token set in localStorage:", token);
             const fetchUserProfile = async () => {
+=======
+        const fetchUserProfile = async () => {
+            if (token) {
+                setIsLoading(true);
+                localStorage.setItem('token', token);
+                console.log("AuthContext useEffect - Token set in localStorage:", token);
+>>>>>>> Stashed changes
                 console.log("AuthContext useEffect - Fetching user profile..."); // Added log before fetch
                 try {
                     const response = await fetch('/api/users/me/profile', { // **CORRECTED URL to /me/profile**
@@ -25,6 +34,8 @@ export const AuthProvider = ({ children }) => {
                     console.log("AuthContext useEffect - User profile fetch response status:", response.status); // Log response status
                     if (response.ok) {
                         const userData = await response.json();
+                        console.log("AuthContext useEffect - User data:", userData); // Add this line
+                            setUser(userData);
                         setUser(userData); // Set user data in AuthContext
                         console.log("AuthContext useEffect - User profile fetched successfully:", userData);
                     } else {
@@ -34,7 +45,10 @@ export const AuthProvider = ({ children }) => {
                 } catch (error) {
                     console.error("AuthContext useEffect - Error during user profile fetch:", error);
                     setUser(null); // Clear user on error
+                } finally {
+                    setIsLoading(false);
                 }
+<<<<<<< Updated upstream
             };
             fetchUserProfile();
         } else {
@@ -42,13 +56,25 @@ export const AuthProvider = ({ children }) => {
             console.log("AuthContext useEffect - Token removed from localStorage.");
             setUser(null); // Clear user on logout/token removal
         }
+=======
+            } else {
+                setIsLoading(false);
+                localStorage.removeItem('token');
+                console.log("AuthContext useEffect - Token removed from localStorage.");
+                setUser(null); // Clear user on logout/token removal
+            }
+        };
+
+        fetchUserProfile();
+>>>>>>> Stashed changes
     }, [token]);
 
-    const login = (data) => {
+    const login = async (data) => {
         setToken(data.token);
-        // setUser will be set in the useEffect after token change
         console.log("AuthContext login - Token set:", data.token);
-
+        // Instead of fetching profile again, set the user here with data received after login
+        setUser(data.user); // Assuming your login response includes the user data in the `user` property
+        setIsLoading(false);
         const userRole = data.user?.role;
         console.log("AuthContext login - User Role:", userRole);
         console.log("AuthContext login - Role Type:", typeof userRole);
@@ -56,20 +82,20 @@ export const AuthProvider = ({ children }) => {
 
         if (userRole === 'doctor') {
             console.log("AuthContext login - Condition: userRole === 'doctor' is TRUE");
-            navigate('/dashboard');
+            navigate('/doctor-dashboard');
         } else if (userRole === 'patient') {
             console.log("AuthContext login - Condition: userRole === 'patient' is TRUE");
             navigate('/');
         } else {
             console.log("AuthContext login - Condition: Default case");
-            navigate('/dashboard');
+            navigate('/doctor-dashboard');
         }
     };
 
     const logout = () => {
-        setToken(null); // Setting token to null will trigger useEffect to clear user
-        console.log("AuthContext logout - Token set to null (user will be cleared by useEffect).");
-        setUser(null); // Explicitly clear user on logout as well
+        setToken(null);
+        console.log("AuthContext logout - Token set to null.");
+        setUser(null);
         navigate('/login');
     };
 
@@ -77,12 +103,13 @@ export const AuthProvider = ({ children }) => {
         token,
         login,
         logout,
-        user, // Expose user data
+        user,
+        isLoading,
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            {isLoading ? <p>Loading user...</p> : children}
         </AuthContext.Provider>
     );
 };

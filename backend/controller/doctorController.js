@@ -1,6 +1,7 @@
 import Appointment from "../model/Appointment.js"; // <-- Import your Appointment model (adjust path if needed)
+import User from "../model/user.js"; // Import the User model
 
-export const getMyAppointmentsController = async (req, res) => { // <-- ADDED 'export const' to export the function!
+export const getMyAppointmentsController = async (req, res) => {
   try {
     const doctorId = req.user.userId; // Extract doctor's ID from req.user (set by checkToken middleware)
 
@@ -10,7 +11,15 @@ export const getMyAppointmentsController = async (req, res) => { // <-- ADDED 'e
 
     // Fetch appointments from database for this doctorId
     const appointments = await Appointment.find({ doctorId: doctorId })
-      .populate('patient', 'firstName lastName') // Populate patient details (adjust fields as needed)
+      .populate({
+        path: 'patient',
+        select: 'firstName lastName' // Populate patient details (adjust fields as needed)
+      })
+      .populate({
+        path: 'doctor',  // Populate the doctor field in the appointment
+        model: User,       // Specify the User model
+        select: '_id name speciality', // Select only the required doctor fields
+      })
       .sort({ appointmentTime: 1 }); // Sort appointments by time (optional)
 
     console.log("Appointments fetched:", appointments); // <-- ADDED: Logging fetched appointments

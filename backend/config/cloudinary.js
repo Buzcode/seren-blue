@@ -1,5 +1,4 @@
-import pkg from 'cloudinary';
-const cloudinary = pkg.v2;
+import cloudinary from 'cloudinary'; // Correct
 
 const connectCloudinary = () => { // 1. Wrap the configuration in a function
     cloudinary.config({
